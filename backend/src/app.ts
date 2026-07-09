@@ -4,6 +4,8 @@ import Fastify, { FastifyInstance } from "fastify";
 import prismaPlugin from "./plugins/prisma";
 import authPlugin from "./plugins/auth";
 
+import healthRoutes from "./routes/health";
+
 export async function buildApp(): Promise<FastifyInstance> {
   const app = Fastify({
     logger: {
@@ -25,17 +27,7 @@ export async function buildApp(): Promise<FastifyInstance> {
     status: "running"
   }));
 
-  app.get("/api/v1/health", async () => {
-    await app.prisma.$queryRaw`SELECT 1`;
-
-    return {
-      status: "ok",
-      timestamp: new Date().toISOString(),
-      services: {
-        database: "up"
-      }
-    };
-  });
+  await app.register(healthRoutes);
 
   return app;
 }
