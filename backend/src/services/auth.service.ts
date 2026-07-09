@@ -1,5 +1,5 @@
-import { FastifyInstance } from "fastify";
-import bcrypt from "bcrypt";
+import { LoginInput } from "../schemas/auth.schema";
+import { LoginResponse } from "../types/auth.types";
 
 import { LoginInput, LoginResponse } from "../schemas/auth.schema";
 
