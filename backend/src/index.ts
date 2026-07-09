@@ -1,26 +1,50 @@
-```typescript
-import dotenv from "dotenv";
-dotenv.config();
+import "dotenv/config";
 
-import { buildApp } from "./app";
+import Fastify from "fastify";
+import cors from "@fastify/cors";
+import helmet from "@fastify/helmet";
+import rateLimit from "@fastify/rate-limit";
 
-const start = async () => {
+import { registerPlugins } from "./plugins";
+import { registerRoutes } from "./routes";
+
+const app = Fastify({
+  logger: {
+    transport: {
+      target: "pino-pretty"
+    }
+  }
+});
+
+async function start() {
   try {
-    const app = await buildApp();
+    await app.register(cors);
 
-    const port = Number(process.env.PORT) || 3000;
+    await app.register(helmet);
 
-    await app.listen({
-      host: "0.0.0.0",
-      port
+    await app.register(rateLimit, {
+      max: 100,
+      timeWindow: "1 minute"
     });
 
-    app.log.info(`🚀 SmartPOS API running on http://localhost:${port}`);
+    await registerPlugins(app);
+
+    await registerRoutes(app);
+
+    const PORT = Number(process.env.PORT) || 3000;
+    const HOST = process.env.HOST || "0.0.0.0";
+
+    await app.listen({
+      port: PORT,
+      host: HOST
+    });
+
+    app.log.info(`🚀 SmartPOS API running on http://localhost:${PORT}`);
+    app.log.info(`📘 Swagger Docs: http://localhost:${PORT}/docs`);
   } catch (error) {
-    console.error(error);
+    app.log.error(error);
     process.exit(1);
   }
-};
+}
 
 start();
-```
