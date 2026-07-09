@@ -5,21 +5,22 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
 
-    "rootDir": "./src",
-    "outDir": "./dist",
+    "rootDir": "src",
+    "outDir": "dist",
 
     "strict": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
 
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+
     "resolveJsonModule": true,
 
-    "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
 
+    "forceConsistentCasingInFileNames": true,
+
     "sourceMap": true,
+
     "declaration": false,
 
     "types": ["node"]
