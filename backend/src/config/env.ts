@@ -111,3 +111,23 @@ export const env = {
 };
 
 export default env;
+
+SMTP_HOST:
+  process.env.SMTP_HOST || "",
+
+SMTP_PORT:
+  Number(
+    process.env.SMTP_PORT || 587
+  ),
+
+SMTP_SECURE:
+  process.env.SMTP_SECURE || "false",
+
+SMTP_USER:
+  process.env.SMTP_USER || "",
+
+SMTP_PASSWORD:
+  process.env.SMTP_PASSWORD || "",
+
+SMTP_FROM:
+  process.env.SMTP_FROM || ""
