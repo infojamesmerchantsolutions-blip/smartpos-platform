@@ -1,18 +1,41 @@
-import Fastify from 'fastify';
+import Fastify from "fastify";
 
-import { env } from './config/env';
-import { registerPlugins } from './plugins';
-import { registerRoutes } from './routes';
+import corsPlugin from "./plugins/cors.plugin.js";
+import helmetPlugin from "./plugins/helmet.plugin.js";
+import jwtPlugin from "./plugins/jwt.plugin.js";
+import prismaPlugin from "./plugins/prisma.plugin.js";
+import swaggerPlugin from "./plugins/swagger.plugin.js";
 
-export async function buildApp() {
-  const app = Fastify({
-    logger: {
-      level: env.LOG_LEVEL
+const app = Fastify({
+  logger: {
+    level: process.env.LOG_LEVEL || "info",
+    transport: {
+      target: "pino-pretty",
+      options: {
+        translateTime: "SYS:standard",
+        colorize: true
+      }
     }
-  });
+  }
+});
 
-  await registerPlugins(app);
-  await registerRoutes(app);
+await app.register(corsPlugin);
 
-  return app;
-}
+await app.register(helmetPlugin);
+
+await app.register(jwtPlugin);
+
+await app.register(prismaPlugin);
+
+await app.register(swaggerPlugin);
+
+app.get("/", async () => {
+  return {
+    success: true,
+    name: "SmartPOS Platform",
+    version: "1.0.0",
+    message: "Backend is running."
+  };
+});
+
+export default app;
