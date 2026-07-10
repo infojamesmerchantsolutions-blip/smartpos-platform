@@ -1,25 +1,67 @@
-export const APP_NAME = "SmartPOS Platform";
+export const API_PREFIX =
 
-export const API_PREFIX = "/api/v1";
+  "/api/v1";
 
-export const DEFAULT_PAGE = 1;
+export const DEFAULT_CURRENCY =
 
-export const DEFAULT_LIMIT = 20;
+  "USD";
 
-export const MAX_LIMIT = 100;
+export const DEFAULT_PAGE =
 
-export const PASSWORD_MIN_LENGTH = 8;
+  1;
 
-export const PASSWORD_MAX_LENGTH = 128;
+export const DEFAULT_LIMIT =
 
-export const CACHE_TTL = 300;
+  20;
 
-export const OTP_EXPIRY = 300;
+export const MAX_LIMIT =
 
-export const JWT_COOKIE_NAME = "smartpos_access";
+  100;
 
-export const REFRESH_COOKIE_NAME = "smartpos_refresh";
+export const JWT_SCHEME =
 
-export const HEALTH_CHECK_ROUTE = "/health";
+  "Bearer";
 
-export const SWAGGER_ROUTE = "/docs";
+export const PAYMENT_TIMEOUT =
+
+  15 * 60 * 1000;
+
+export const SETTLEMENT_BATCH_SIZE =
+
+  100;
+
+export const BLOCK_CONFIRMATIONS =
+
+  6;
+
+export const HEALTH_ROUTE =
+
+  "/health";
+
+export const DOCS_ROUTE =
+
+  "/docs";
+
+export const TRANSACTION_REFERENCE_PREFIX =
+
+  "TXN";
+
+export const PAYMENT_REFERENCE_PREFIX =
+
+  "PAY";
+
+export const SETTLEMENT_REFERENCE_PREFIX =
+
+  "SET";
+
+export const WALLET_TRANSFER_REFERENCE_PREFIX =
+
+  "WT";
+
+export const BLOCKCHAIN_REFERENCE_PREFIX =
+
+  "BC";
+
+export const PASSWORD_SALT_ROUNDS =
+
+  12;
