@@ -1,38 +1,48 @@
-import dotenv from 'dotenv';
-import { z } from 'zod';
+import dotenv from "dotenv";
 
 dotenv.config();
 
-const envSchema = z.object({
-  NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+function required(key: string): string {
+  const value = process.env[key];
 
-  PORT: z.coerce.number().default(3000),
+  if (!value) {
+    throw new Error(`Missing environment variable: ${key}`);
+  }
 
-  DATABASE_URL: z.string().min(1),
+  return value;
+}
 
-  JWT_SECRET: z.string().min(32),
-  JWT_EXPIRES_IN: z.string().default('1d'),
+export const env = {
 
-  LOG_LEVEL: z.enum([
-    'fatal',
-    'error',
-    'warn',
-    'info',
-    'debug',
-    'trace',
-    'silent'
-  ]).default('info'),
+  nodeEnv: process.env.NODE_ENV || "development",
 
-  BLOCKCHAIN_NETWORK: z.string(),
-  RPC_URL: z.string().optional(),
-  PRIVATE_KEY: z.string().optional(),
-  TREASURY_WALLET: z.string().optional(),
+  host: process.env.HOST || "0.0.0.0",
 
-  EXCHANGE_RATE_PROVIDER: z.string().optional(),
+  port: Number(process.env.PORT || 4000),
 
-  KYC_PROVIDER: z.string().optional(),
+  appName: process.env.APP_NAME || "SmartPOS",
 
-  WEBHOOK_SECRET: z.string().optional()
-});
+  appUrl: process.env.APP_URL || "http://localhost:4000",
 
-export const env = envSchema.parse(process.env);
+  databaseUrl: required("DATABASE_URL"),
+
+  jwtSecret: required("JWT_SECRET"),
+
+  jwtRefreshSecret: required("JWT_REFRESH_SECRET"),
+
+  jwtExpiresIn: process.env.JWT_EXPIRES_IN || "15m",
+
+  jwtRefreshExpiresIn:
+    process.env.JWT_REFRESH_EXPIRES_IN || "30d",
+
+  encryptionKey: required("ENCRYPTION_KEY"),
+
+  redisHost: process.env.REDIS_HOST || "localhost",
+
+  redisPort: Number(process.env.REDIS_PORT || 6379),
+
+  redisPassword: process.env.REDIS_PASSWORD,
+
+  logLevel: process.env.LOG_LEVEL || "info"
+
+};
