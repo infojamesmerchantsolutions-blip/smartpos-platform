@@ -1,1 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../backend/node_modules/@prisma/client"
+}
 
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/////////////////////////////////////////////////
+// ENUMS
+/////////////////////////////////////////////////
+
+enum UserRole {
+  SUPER_ADMIN
+  MERCHANT_ADMIN
+  MANAGER
+  CASHIER
+  SUPPORT
+}
+
+enum MerchantStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+  DISABLED
+}
+
+enum TerminalStatus {
+  PENDING
+  ACTIVE
+  BLOCKED
+  OFFLINE
+}
+
+enum WalletType {
+  HOT
+  COLD
+}
+
+enum WalletStatus {
+  ACTIVE
+  LOCKED
+}
+
+enum CurrencyType {
+  USD
+  NGN
+  USDT
+  USDC
+  BTC
+  ETH
+}
+
+enum TransactionStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum SettlementStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum KycStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
