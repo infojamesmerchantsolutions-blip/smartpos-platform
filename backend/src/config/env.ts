@@ -2,47 +2,112 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-function required(key: string): string {
-  const value = process.env[key];
+function required(
+
+  key: string
+
+): string {
+
+  const value =
+
+    process.env[key];
 
   if (!value) {
-    throw new Error(`Missing environment variable: ${key}`);
+
+    throw new Error(
+
+      `Missing environment variable: ${key}`
+
+    );
+
   }
 
   return value;
+
 }
 
 export const env = {
 
-  nodeEnv: process.env.NODE_ENV || "development",
+  NODE_ENV:
 
-  host: process.env.HOST || "0.0.0.0",
+    process.env.NODE_ENV ||
 
-  port: Number(process.env.PORT || 4000),
+    "development",
 
-  appName: process.env.APP_NAME || "SmartPOS",
+  PORT:
 
-  appUrl: process.env.APP_URL || "http://localhost:4000",
+    Number(
 
-  databaseUrl: required("DATABASE_URL"),
+      process.env.PORT ||
 
-  jwtSecret: required("JWT_SECRET"),
+      3000
 
-  jwtRefreshSecret: required("JWT_REFRESH_SECRET"),
+    ),
 
-  jwtExpiresIn: process.env.JWT_EXPIRES_IN || "15m",
+  HOST:
 
-  jwtRefreshExpiresIn:
-    process.env.JWT_REFRESH_EXPIRES_IN || "30d",
+    process.env.HOST ||
 
-  encryptionKey: required("ENCRYPTION_KEY"),
+    "0.0.0.0",
 
-  redisHost: process.env.REDIS_HOST || "localhost",
+  DATABASE_URL:
 
-  redisPort: Number(process.env.REDIS_PORT || 6379),
+    required(
 
-  redisPassword: process.env.REDIS_PASSWORD,
+      "DATABASE_URL"
 
-  logLevel: process.env.LOG_LEVEL || "info"
+    ),
+
+  JWT_SECRET:
+
+    required(
+
+      "JWT_SECRET"
+
+    ),
+
+  JWT_EXPIRES_IN:
+
+    process.env.JWT_EXPIRES_IN ||
+
+    "7d",
+
+  REDIS_URL:
+
+    process.env.REDIS_URL ||
+
+    "",
+
+  STRIPE_SECRET_KEY:
+
+    process.env.STRIPE_SECRET_KEY ||
+
+    "",
+
+  PAYSTACK_SECRET_KEY:
+
+    process.env.PAYSTACK_SECRET_KEY ||
+
+    "",
+
+  FLUTTERWAVE_SECRET_KEY:
+
+    process.env.FLUTTERWAVE_SECRET_KEY ||
+
+    "",
+
+  COINBASE_API_KEY:
+
+    process.env.COINBASE_API_KEY ||
+
+    "",
+
+  BINANCE_API_KEY:
+
+    process.env.BINANCE_API_KEY ||
+
+    ""
 
 };
+
+export default env;
