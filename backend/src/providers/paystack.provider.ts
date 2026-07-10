@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 
 import BaseProvider, {
 
@@ -16,6 +16,8 @@ export default class PaystackProvider extends BaseProvider {
 
   readonly name = "paystack";
 
+  private readonly client: AxiosInstance;
+
   constructor(
 
     private readonly secretKey: string
@@ -23,6 +25,26 @@ export default class PaystackProvider extends BaseProvider {
   ) {
 
     super();
+
+    this.client = axios.create({
+
+      baseURL:
+
+        "https://api.paystack.co",
+
+      headers: {
+
+        Authorization:
+
+          `Bearer ${secretKey}`,
+
+        "Content-Type":
+
+          "application/json"
+
+      }
+
+    );
 
   }
 
@@ -32,11 +54,65 @@ export default class PaystackProvider extends BaseProvider {
 
   ): Promise<ProviderResponse> {
 
-    throw new Error(
+    const response =
 
-      "Not implemented."
+      await this.client.post(
 
-    );
+        "/transaction/initialize",
+
+        {
+
+          amount:
+
+            Math.round(
+
+              input.amount * 100
+
+            ),
+
+          currency:
+
+            input.currency,
+
+          email:
+
+            input.customer?.email,
+
+          reference:
+
+            input.reference,
+
+          metadata:
+
+            input.metadata
+
+        }
+
+      );
+
+    return {
+
+      success:
+
+        response.data.status,
+
+      message:
+
+        response.data.message,
+
+      reference:
+
+        response.data.data.reference,
+
+      transactionId:
+
+        response.data.data.reference,
+
+      raw:
+
+        response.data
+
+    };
 
   }
 
@@ -46,11 +122,33 @@ export default class PaystackProvider extends BaseProvider {
 
   ): Promise<ProviderResponse> {
 
-    throw new Error(
+    const response =
 
-      "Not implemented."
+      await this.client.get(
 
-    );
+        `/transaction/verify/${input.transactionId}`
+
+      );
+
+    return {
+
+      success:
+
+        response.data.status,
+
+      message:
+
+        response.data.data.status,
+
+      transactionId:
+
+        input.transactionId,
+
+      raw:
+
+        response.data
+
+    };
 
   }
 
@@ -60,11 +158,53 @@ export default class PaystackProvider extends BaseProvider {
 
   ): Promise<ProviderResponse> {
 
-    throw new Error(
+    const response =
 
-      "Not implemented."
+      await this.client.post(
 
-    );
+        "/refund",
+
+        {
+
+          transaction:
+
+            input.transactionId,
+
+          amount:
+
+            input.amount
+
+              ? Math.round(
+
+                  input.amount * 100
+
+                )
+
+              : undefined
+
+        }
+
+      );
+
+    return {
+
+      success:
+
+        response.data.status,
+
+      message:
+
+        response.data.message,
+
+      transactionId:
+
+        response.data.data.id?.toString(),
+
+      raw:
+
+        response.data
+
+    };
 
   }
 
@@ -76,11 +216,31 @@ export default class PaystackProvider extends BaseProvider {
 
   ): Promise<boolean> {
 
-    throw new Error(
+    const crypto =
 
-      "Not implemented."
+      await import("crypto");
 
-    );
+    const hash =
+
+      crypto
+
+        .createHmac(
+
+          "sha512",
+
+          this.secretKey
+
+        )
+
+        .update(
+
+          JSON.stringify(payload)
+
+        )
+
+        .digest("hex");
+
+    return hash === signature;
 
   }
 
