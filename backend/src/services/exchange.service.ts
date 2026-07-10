@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { FastifyInstance } from "fastify";
 
 export default class ExchangeService {
@@ -6,26 +7,33 @@ export default class ExchangeService {
     private readonly app: FastifyInstance
   ) {}
 
+  /*
+  |--------------------------------------------------------------------------
+  | Exchange Rate
+  |--------------------------------------------------------------------------
+  */
+
   async latestRate(
-    fiatCurrency: string,
-    cryptoCurrency: string
+
+    fromCurrency: any,
+
+    toCurrency: any
+
   ) {
 
     return this.app.prisma.exchangeRate.findFirst({
 
       where: {
 
-        fiatCurrency,
+        fromCurrency,
 
-        cryptoCurrency,
-
-        active: true
+        toCurrency
 
       },
 
       orderBy: {
 
-        createdAt: "desc"
+        timestamp: "desc"
 
       }
 
@@ -33,45 +41,274 @@ export default class ExchangeService {
 
   }
 
-  async createQuote(
-    paymentIntentId: string,
-    fiatAmount: number,
-    fiatCurrency: string,
-    cryptoCurrency: string
+  async createExchangeRate(data: {
+
+    fromCurrency: any;
+
+    toCurrency: any;
+
+    rate: Prisma.Decimal;
+
+    source: string;
+
+    expiresAt?: Date;
+
+    metadata?: Prisma.JsonValue;
+
+  }) {
+
+    return this.app.prisma.exchangeRate.create({
+
+      data: {
+
+        fromCurrency: data.fromCurrency,
+
+        toCurrency: data.toCurrency,
+
+        rate: data.rate,
+
+        source: data.source,
+
+        expiresAt: data.expiresAt,
+
+        metadata: data.metadata
+
+      }
+
+    });
+
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | Quote
+  |--------------------------------------------------------------------------
+  */
+
+  async calculateQuote(
+
+    fromCurrency: any,
+
+    toCurrency: any,
+
+    amount: Prisma.Decimal
+
   ) {
 
     const rate =
       await this.latestRate(
-        fiatCurrency,
-        cryptoCurrency
+        fromCurrency,
+        toCurrency
       );
 
     if (!rate) {
-      throw new Error("Exchange rate unavailable.");
+
+      throw new Error(
+        "Exchange rate unavailable."
+      );
+
     }
 
-    const cryptoAmount =
-      fiatAmount / Number(rate.rate);
+    const convertedAmount =
+      amount.mul(rate.rate);
 
-    return this.app.prisma.cryptoQuote.create({
+    return {
+
+      fromCurrency,
+
+      toCurrency,
+
+      rate: rate.rate,
+
+      amount,
+
+      convertedAmount,
+
+      expiresAt: rate.expiresAt
+
+    };
+
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | Conversion
+  |--------------------------------------------------------------------------
+  */
+
+  async createConversion(data: {
+
+    merchantId: string;
+
+    transactionId?: string;
+
+    fromCurrency: any;
+
+    toCurrency: any;
+
+    fromAmount: Prisma.Decimal;
+
+    fee?: Prisma.Decimal;
+
+    exchangeProvider?: string;
+
+    metadata?: Prisma.JsonValue;
+
+  }) {
+
+    const quote =
+      await this.calculateQuote(
+
+        data.fromCurrency,
+
+        data.toCurrency,
+
+        data.fromAmount
+
+      );
+
+    const fee =
+      data.fee ??
+      new Prisma.Decimal(0);
+
+    const finalAmount =
+      quote.convertedAmount.sub(fee);
+
+    return this.app.prisma.cryptoConversion.create({
 
       data: {
 
-        paymentIntentId,
+        merchantId: data.merchantId,
 
-        fiatAmount,
+        transactionId: data.transactionId,
 
-        fiatCurrency,
+        fromCurrency: data.fromCurrency,
 
-        cryptoAmount,
+        toCurrency: data.toCurrency,
 
-        cryptoCurrency,
+        fromAmount: data.fromAmount,
 
-        exchangeRate: rate.rate,
+        toAmount: finalAmount,
 
-        expiresAt: new Date(
-          Date.now() + 60000
-        )
+        rate: quote.rate,
+
+        fee,
+
+        exchangeProvider:
+          data.exchangeProvider,
+
+        metadata:
+          data.metadata,
+
+        status: "pending"
+
+      }
+
+    });
+
+  }
+
+  async completeConversion(
+
+    conversionId: string
+
+  ) {
+
+    return this.app.prisma.cryptoConversion.update({
+
+      where: {
+
+        id: conversionId
+
+      },
+
+      data: {
+
+        status: "completed",
+
+        completedAt: new Date()
+
+      }
+
+    });
+
+  }
+
+  async failConversion(
+
+    conversionId: string
+
+  ) {
+
+    return this.app.prisma.cryptoConversion.update({
+
+      where: {
+
+        id: conversionId
+
+      },
+
+      data: {
+
+        status: "failed"
+
+      }
+
+    });
+
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | Lookup
+  |--------------------------------------------------------------------------
+  */
+
+  async findConversion(
+
+    id: string
+
+  ) {
+
+    return this.app.prisma.cryptoConversion.findUnique({
+
+      where: {
+
+        id
+
+      },
+
+      include: {
+
+        merchant: true,
+
+        transaction: true,
+
+        walletTransfer: true
+
+      }
+
+    });
+
+  }
+
+  async merchantConversions(
+
+    merchantId: string
+
+  ) {
+
+    return this.app.prisma.cryptoConversion.findMany({
+
+      where: {
+
+        merchantId
+
+      },
+
+      orderBy: {
+
+        createdAt: "desc"
 
       }
 
