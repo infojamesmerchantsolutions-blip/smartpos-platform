@@ -79,21 +79,34 @@ enum KycStatus {
 /////////////////////////////////////////////////
 
 model Merchant {
-  id            String            @id @default(cuid())
+  id              String        @id @default(cuid())
 
-  businessName  String
-  email         String            @unique
-  phone         String?
+  businessName    String
+  email           String        @unique
+  phone           String?
 
-  status        MerchantStatus    @default(PENDING)
+  status          MerchantStatus @default(PENDING)
 
-  users         User[]
-  terminals     Terminal[]
-  wallets       Wallet[]
-  apiKeys       ApiKey[]
+  users           User[]
+  terminals       Terminal[]
+  wallets         Wallet[]
 
-  createdAt     DateTime          @default(now())
-  updatedAt     DateTime          @updatedAt
+  apiKeys         ApiKey[]
+  bankAccounts    BankAccount[]
+  webhooks        Webhook[]
+
+  kyc             Kyc?
+
+  transactions    Transaction[]
+
+  devices         Device[]
+
+  notifications   Notification[]
+
+  exchangeRates   ExchangeRate[]
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
 }
 
 /////////////////////////////////////////////////
@@ -101,22 +114,28 @@ model Merchant {
 /////////////////////////////////////////////////
 
 model User {
-  id            String            @id @default(cuid())
+  id               String           @id @default(cuid())
 
-  merchantId    String
-  merchant      Merchant          @relation(fields: [merchantId], references: [id])
+  merchantId       String
+  merchant         Merchant         @relation(fields: [merchantId], references: [id])
 
-  fullName      String
-  email         String            @unique
-  passwordHash  String
+  fullName         String
 
-  role          UserRole
+  email            String           @unique
 
-  refreshTokens RefreshToken[]
-  auditLogs     AuditLog[]
+  passwordHash     String
 
-  createdAt     DateTime          @default(now())
-  updatedAt     DateTime          @updatedAt
+  role             UserRole
+
+  refreshTokens    RefreshToken[]
+
+  auditLogs        AuditLog[]
+
+  notifications    Notification[]
+
+  createdAt        DateTime         @default(now())
+
+  updatedAt        DateTime         @updatedAt
 }
 
 /////////////////////////////////////////////////
@@ -142,4 +161,524 @@ model Terminal {
 
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt
+}
+
+/////////////////////////////////////////////////
+// WALLETS
+/////////////////////////////////////////////////
+
+model Wallet {
+  id              String          @id @default(cuid())
+
+  merchantId      String
+  merchant        Merchant        @relation(fields: [merchantId], references: [id])
+
+  address         String          @unique
+
+  blockchain      String
+
+  currency        CurrencyType
+
+  type            WalletType      @default(HOT)
+
+  status          WalletStatus    @default(ACTIVE)
+
+  settlements     Settlement[]
+
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+/////////////////////////////////////////////////
+// TRANSACTIONS
+/////////////////////////////////////////////////
+
+model Transaction {
+  id                String               @id @default(cuid())
+
+  merchantId        String
+  merchant          Merchant             @relation(fields: [merchantId], references: [id])
+
+  terminalId        String?
+  terminal          Terminal?            @relation(fields: [terminalId], references: [id])
+
+  reference         String               @unique
+
+  cardReference     String?
+
+  fiatCurrency      CurrencyType
+
+  fiatAmount        Decimal              @db.Decimal(18,2)
+
+  cryptoCurrency    CurrencyType
+
+  cryptoAmount      Decimal              @db.Decimal(30,18)
+
+  exchangeRate      Decimal              @db.Decimal(30,18)
+
+  blockchainHash    String?
+
+  status            TransactionStatus    @default(PENDING)
+
+  settlement        Settlement?
+
+  createdAt         DateTime             @default(now())
+
+  updatedAt         DateTime             @updatedAt
+}
+
+/////////////////////////////////////////////////
+// SETTLEMENTS
+/////////////////////////////////////////////////
+
+model Settlement {
+  id                 String                @id @default(cuid())
+
+  transactionId      String                @unique
+  transaction        Transaction           @relation(fields: [transactionId], references: [id])
+
+  walletId           String
+  wallet             Wallet                @relation(fields: [walletId], references: [id])
+
+  amount             Decimal               @db.Decimal(30,18)
+
+  blockchainHash     String?
+
+  status             SettlementStatus      @default(PENDING)
+
+  completedAt        DateTime?
+
+  createdAt          DateTime              @default(now())
+}
+
+/////////////////////////////////////////////////
+// KYC
+/////////////////////////////////////////////////
+
+model Kyc {
+  id                  String            @id @default(cuid())
+
+  merchantId          String            @unique
+  merchant            Merchant          @relation(fields: [merchantId], references: [id])
+
+  legalBusinessName   String
+  registrationNumber  String?
+
+  taxIdentification   String?
+
+  businessType        String
+
+  country             String
+  state               String
+  city                String
+
+  addressLine1        String
+  addressLine2        String?
+
+  postalCode          String?
+
+  contactPerson       String
+
+  contactEmail        String
+
+  contactPhone        String
+
+  identityDocument    String?
+
+  proofOfAddress      String?
+
+  selfieVerification  String?
+
+  status              KycStatus         @default(PENDING)
+
+  rejectionReason     String?
+
+  reviewedBy          String?
+
+  reviewedAt          DateTime?
+
+  submittedAt         DateTime?
+
+  expiresAt           DateTime?
+
+  createdAt           DateTime          @default(now())
+
+  updatedAt           DateTime          @updatedAt
+}
+
+/////////////////////////////////////////////////
+// API KEYS
+/////////////////////////////////////////////////
+
+model ApiKey {
+  id                 String            @id @default(cuid())
+
+  merchantId         String
+  merchant           Merchant          @relation(fields: [merchantId], references: [id])
+
+  name               String
+
+  key                String            @unique
+
+  secret             String
+
+  environment        String
+
+  isActive           Boolean           @default(true)
+
+  lastUsedAt         DateTime?
+
+  expiresAt          DateTime?
+
+  ipWhitelist        String?
+
+  webhookSigningKey  String?
+
+  createdAt          DateTime          @default(now())
+
+  updatedAt          DateTime          @updatedAt
+}
+
+/////////////////////////////////////////////////
+// REFRESH TOKENS
+/////////////////////////////////////////////////
+
+model RefreshToken {
+  id             String        @id @default(cuid())
+
+  userId         String
+  user           User          @relation(fields: [userId], references: [id])
+
+  token          String        @unique
+
+  deviceName     String?
+
+  deviceId       String?
+
+  ipAddress      String?
+
+  userAgent      String?
+
+  revoked        Boolean       @default(false)
+
+  expiresAt      DateTime
+
+  createdAt      DateTime      @default(now())
+}
+
+/////////////////////////////////////////////////
+// USER SESSIONS
+/////////////////////////////////////////////////
+
+model Session {
+  id             String        @id @default(cuid())
+
+  userId         String
+
+  deviceId       String?
+
+  deviceName     String?
+
+  ipAddress      String?
+
+  userAgent      String?
+
+  lastActivity   DateTime
+
+  expiresAt      DateTime
+
+  createdAt      DateTime      @default(now())
+}
+
+/////////////////////////////////////////////////
+// AUDIT LOGS
+/////////////////////////////////////////////////
+
+model AuditLog {
+  id             String        @id @default(cuid())
+
+  userId         String
+  user           User          @relation(fields: [userId], references: [id])
+
+  action         String
+
+  entity         String
+
+  entityId       String?
+
+  method         String?
+
+  endpoint       String?
+
+  ipAddress      String?
+
+  userAgent      String?
+
+  oldValue       Json?
+
+  newValue       Json?
+
+  createdAt      DateTime      @default(now())
+}
+
+/////////////////////////////////////////////////
+// BANK ACCOUNTS
+/////////////////////////////////////////////////
+
+model BankAccount {
+  id                    String      @id @default(cuid())
+
+  merchantId            String
+  merchant              Merchant    @relation(fields: [merchantId], references: [id])
+
+  accountName           String
+  accountNumber         String
+
+  bankName              String
+  bankCode              String
+
+  branchName            String?
+
+  swiftCode             String?
+
+  iban                  String?
+
+  routingNumber         String?
+
+  currency              CurrencyType
+
+  isPrimary             Boolean     @default(false)
+
+  verificationStatus    Boolean     @default(false)
+
+  verificationReference String?
+
+  createdAt             DateTime    @default(now())
+
+  updatedAt             DateTime    @updatedAt
+
+  @@index([merchantId])
+}
+
+/////////////////////////////////////////////////
+// WEBHOOKS
+/////////////////////////////////////////////////
+
+model Webhook {
+  id                 String      @id @default(cuid())
+
+  merchantId         String
+  merchant           Merchant    @relation(fields: [merchantId], references: [id])
+
+  name               String
+
+  url                String
+
+  secret             String
+
+  events             Json
+
+  active             Boolean     @default(true)
+
+  retryAttempts      Int         @default(0)
+
+  timeoutSeconds     Int         @default(30)
+
+  lastTriggeredAt    DateTime?
+
+  lastResponseCode   Int?
+
+  lastResponseBody   String?
+
+  createdAt          DateTime    @default(now())
+
+  updatedAt          DateTime    @updatedAt
+
+  @@index([merchantId])
+}
+
+/////////////////////////////////////////////////
+// NOTIFICATIONS
+/////////////////////////////////////////////////
+
+model Notification {
+  id              String       @id @default(cuid())
+
+  merchantId      String?
+  merchant        Merchant?    @relation(fields: [merchantId], references: [id])
+
+  userId          String?
+  user            User?        @relation(fields: [userId], references: [id])
+
+  title           String
+
+  message         String
+
+  type            String
+
+  channel         String
+
+  read            Boolean      @default(false)
+
+  metadata        Json?
+
+  sentAt          DateTime?
+
+  createdAt       DateTime     @default(now())
+}
+
+/////////////////////////////////////////////////
+// EXCHANGE RATES
+/////////////////////////////////////////////////
+
+model ExchangeRate {
+  id                String      @id @default(cuid())
+
+  baseCurrency      CurrencyType
+
+  quoteCurrency     CurrencyType
+
+  rate              Decimal     @db.Decimal(30,18)
+
+  provider          String
+
+  source            String?
+
+  fetchedAt         DateTime
+
+  expiresAt         DateTime?
+
+  createdAt         DateTime    @default(now())
+
+  @@unique([baseCurrency, quoteCurrency])
+}
+
+/////////////////////////////////////////////////
+// BLOCKCHAIN TRANSACTIONS
+/////////////////////////////////////////////////
+
+model BlockchainTransaction {
+  id                   String      @id @default(cuid())
+
+  transactionId        String      @unique
+  transaction          Transaction @relation(fields: [transactionId], references: [id])
+
+  network              String
+
+  walletAddress        String
+
+  destinationAddress   String
+
+  transactionHash      String      @unique
+
+  blockNumber          BigInt?
+
+  confirmations        Int         @default(0)
+
+  gasFee               Decimal?    @db.Decimal(30,18)
+
+  gasCurrency          String?
+
+  explorerUrl          String?
+
+  rawResponse          Json?
+
+  broadcastAt          DateTime?
+
+  confirmedAt          DateTime?
+
+  createdAt            DateTime    @default(now())
+}
+
+/////////////////////////////////////////////////
+// POS DEVICES
+/////////////////////////////////////////////////
+
+model Device {
+  id                  String      @id @default(cuid())
+
+  merchantId          String
+  merchant            Merchant    @relation(fields: [merchantId], references: [id])
+
+  terminalId          String?
+  terminal            Terminal?   @relation(fields: [terminalId], references: [id])
+
+  deviceName          String
+
+  manufacturer        String?
+
+  model               String?
+
+  operatingSystem     String?
+
+  osVersion           String?
+
+  serialNumber        String?
+
+  imei                String?
+
+  macAddress          String?
+
+  ipAddress           String?
+
+  firmwareVersion     String?
+
+  appVersion          String?
+
+  lastHeartbeat       DateTime?
+
+  registeredAt        DateTime    @default(now())
+
+  updatedAt           DateTime    @updatedAt
+
+  @@index([merchantId])
+}
+
+/////////////////////////////////////////////////
+// TRANSACTION EVENTS
+/////////////////////////////////////////////////
+
+model TransactionEvent {
+  id                 String      @id @default(cuid())
+
+  transactionId      String
+  transaction        Transaction @relation(fields: [transactionId], references: [id])
+
+  event              String
+
+  description        String?
+
+  status             String
+
+  source             String
+
+  payload            Json?
+
+  createdAt          DateTime    @default(now())
+
+  @@index([transactionId])
+}
+
+/////////////////////////////////////////////////
+// SYSTEM SETTINGS
+/////////////////////////////////////////////////
+
+model SystemSetting {
+  id                String      @id @default(cuid())
+
+  key               String      @unique
+
+  value             Json
+
+  description       String?
+
+  category          String?
+
+  encrypted         Boolean     @default(false)
+
+  editable          Boolean     @default(true)
+
+  createdAt         DateTime    @default(now())
+
+  updatedAt         DateTime    @updatedAt
 }
