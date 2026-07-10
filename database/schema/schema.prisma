@@ -73,3 +73,73 @@ enum KycStatus {
   APPROVED
   REJECTED
 }
+
+/////////////////////////////////////////////////
+// MERCHANTS
+/////////////////////////////////////////////////
+
+model Merchant {
+  id            String            @id @default(cuid())
+
+  businessName  String
+  email         String            @unique
+  phone         String?
+
+  status        MerchantStatus    @default(PENDING)
+
+  users         User[]
+  terminals     Terminal[]
+  wallets       Wallet[]
+  apiKeys       ApiKey[]
+
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+}
+
+/////////////////////////////////////////////////
+// USERS
+/////////////////////////////////////////////////
+
+model User {
+  id            String            @id @default(cuid())
+
+  merchantId    String
+  merchant      Merchant          @relation(fields: [merchantId], references: [id])
+
+  fullName      String
+  email         String            @unique
+  passwordHash  String
+
+  role          UserRole
+
+  refreshTokens RefreshToken[]
+  auditLogs     AuditLog[]
+
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+}
+
+/////////////////////////////////////////////////
+// POS TERMINALS
+/////////////////////////////////////////////////
+
+model Terminal {
+  id             String            @id @default(cuid())
+
+  merchantId     String
+  merchant       Merchant          @relation(fields: [merchantId], references: [id])
+
+  serialNumber   String            @unique
+  deviceId       String            @unique
+
+  name           String
+
+  status         TerminalStatus    @default(PENDING)
+
+  lastSeenAt     DateTime?
+
+  transactions   Transaction[]
+
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+}
