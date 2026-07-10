@@ -1,0 +1,99 @@
+name: SmartPOS Backend CI
+
+on:
+
+  push:
+
+    branches:
+
+      - main
+
+      - develop
+
+  pull_request:
+
+jobs:
+
+  test:
+
+    runs-on: ubuntu-latest
+
+    services:
+
+      postgres:
+
+        image: postgres:16
+
+        env:
+
+          POSTGRES_USER: postgres
+
+          POSTGRES_PASSWORD: postgres
+
+          POSTGRES_DB: smartpos_test
+
+        ports:
+
+          - 5432:5432
+
+        options: >-
+
+          --health-cmd pg_isready
+
+          --health-interval 10s
+
+          --health-timeout 5s
+
+          --health-retries 5
+
+      redis:
+
+        image: redis:7-alpine
+
+        ports:
+
+          - 6379:6379
+
+    env:
+
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/smartpos_test
+
+      REDIS_URL: redis://localhost:6379
+
+      NODE_ENV: test
+
+    steps:
+
+      - name: Checkout
+
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+
+        uses: actions/setup-node@v4
+
+        with:
+
+          node-version: 22
+
+          cache: npm
+
+      - name: Install
+
+        run: npm ci
+
+      - name: Generate Prisma
+
+        run: npx prisma generate
+
+      - name: Run Migrations
+
+        run: npx prisma migrate deploy
+
+      - name: Build
+
+        run: npm run build
+
+      - name: Test
+
+        run: npm test
