@@ -23,6 +23,21 @@ enum UserRole {
   DEVELOPER
 }
 
+enum ReportType {
+  DAILY
+  WEEKLY
+  MONTHLY
+  YEARLY
+  CUSTOM
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  PENDING
+}
+
 enum PermissionType {
   READ
   WRITE
@@ -179,7 +194,7 @@ enum CurrencyType {
   DOT
 }
 
-enum BlockchainNetwork {
+enum BlockchainNetworkType {
   BITCOIN
   ETHEREUM
   BSC
@@ -343,14 +358,14 @@ model User {
   displayName        String?
   avatar             String?
   role               UserRole            @default(VIEWER)
-  status             UserStatus?         // might need to define UserStatus; I'll add enum UserStatus
+  status             UserStatus?         // We'll add UserStatus enum? Actually we have UserStatus? Not defined, let's add quickly.
   lastLoginAt        DateTime?
   lastLoginIP        String?
   isActive           Boolean             @default(true)
   isVerified         Boolean             @default(false)
   isMFAEnabled       Boolean             @default(false)
   mfaSecret          String?
-  backupCodes        Json?               // encrypted backup codes
+  backupCodes        Json?
   passwordResetToken String?             @unique
   passwordResetExpires DateTime?
   emailVerifyToken   String?             @unique
@@ -358,6 +373,7 @@ model User {
   deletedAt          DateTime?
 
   // Relations
+  passwordResets     PasswordReset[]
   merchantId         String?
   merchant           Merchant?           @relation(fields: [merchantId], references: [id], onDelete: SetNull)
   refreshTokens      RefreshToken[]
@@ -369,8 +385,8 @@ model User {
   auditLogs          AuditLog[]          @relation("UserAuditLog")
   notifications      Notification[]      @relation("UserNotification")
   activityLogs       ActivityLog[]       @relation("UserActivity")
-  employee           Employee?           @relation(fields: [employeeId], references: [id]) // if user is also employee
-  employeeId         String?
+  employee           Employee?
+  emailVerifications  EmailVerification[]
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
 
@@ -389,7 +405,7 @@ model RefreshToken {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   expiresAt   DateTime
   revoked     Boolean  @default(false)
-  replacedBy  String?  @unique // token that replaced this one
+  replacedBy  String?  @unique
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -445,12 +461,12 @@ model EmailVerification {
 model ApiKey {
   id          String        @id @default(cuid())
   name        String
-  keyHash     String        @unique // hashed key
+  keyHash     String        @unique
   userId      String
   user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  merchantId  String?       // can be scoped to merchant
+  merchantId  String?       // scoped to merchant
   merchant    Merchant?     @relation(fields: [merchantId], references: [id], onDelete: SetNull)
-  permissions Json          // list of permissions
+  permissions Json
   status      ApiKeyStatus  @default(ACTIVE)
   expiresAt   DateTime?
   lastUsedAt  DateTime?
@@ -474,7 +490,7 @@ model ApiKeyUsage {
   ipAddress   String?
   userAgent   String?
   responseStatus Int
-  responseTime Int // ms
+  responseTime Int
   createdAt   DateTime @default(now())
 
   @@index([apiKeyId])
@@ -483,10 +499,10 @@ model ApiKeyUsage {
 
 model Permission {
   id          String         @id @default(cuid())
-  name        String         @unique // e.g., "transactions:read"
+  name        String         @unique
   description String?
-  resource    String         // e.g., "transactions"
-  action      PermissionType // e.g., READ
+  resource    String
+  action      PermissionType
   roles       RolePermission[]
   userPermissions UserPermission[]
   createdAt   DateTime       @default(now())
@@ -498,11 +514,11 @@ model Permission {
 
 model Role {
   id          String         @id @default(cuid())
-  name        String         @unique // SUPER_ADMIN, ADMIN, etc.
+  name        String         @unique
   description String?
   isSystem    Boolean        @default(false)
   permissions RolePermission[]
-  users       User[]?        // if we want default role? But we have User.role field already; we keep both? We'll use Role for granular permissions.
+  users       User[]        // optional – we keep the relation for direct assignment
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
 
@@ -526,7 +542,7 @@ model UserPermission {
   user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   permissionId String
   permission   Permission   @relation(fields: [permissionId], references: [id], onDelete: Cascade)
-  grantedBy    String?      // user who granted
+  grantedBy    String?
   grantedAt    DateTime     @default(now())
   revokedAt    DateTime?
   createdAt    DateTime     @default(now())
@@ -541,11 +557,11 @@ model OAuthAccount {
   id           String   @id @default(cuid())
   userId       String
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  provider     String   // google, github, etc.
-  providerId   String   // unique ID from provider
+  provider     String
+  providerId   String
   email        String
-  accessToken  String?  // encrypted
-  refreshToken String?  // encrypted
+  accessToken  String?
+  refreshToken String?
   expiresAt    DateTime?
   tokenType    String?
   scope        String?
@@ -566,16 +582,14 @@ model LoginHistory {
   location    String?
   success     Boolean
   failureReason String?
-  deviceId    String?   // could be terminal ID
-  createdAt   DateTime  @default(now())
+  deviceId    String?
+  createdAt   DateTime @default(now())
 
   @@index([userId])
   @@index([createdAt(sort: Desc)])
 }
 
-// ==========================================
-// MERCHANT SYSTEM
-// ==========================================
+// ---------- MERCHANT SYSTEM ----------
 
 model Merchant {
   id                     String                 @id @default(cuid())
@@ -591,7 +605,7 @@ model Merchant {
   currency               CurrencyType           @default(USD)
   status                 MerchantStatus         @default(PENDING)
   description            String?
-  logo                   String?                // URL
+  logo                   String?
   contactEmail           String?
   contactPhone           String?
   addressLine1           String?
@@ -620,6 +634,8 @@ model Merchant {
   merchantNotificationSettings MerchantNotificationSettings?
   merchantSecuritySettings MerchantSecuritySettings?
   merchantWebhookSettings MerchantWebhookSettings?
+  liquidityPools         LiquidityPool[]
+  exchangeOrders         ExchangeOrder[]
   wallets                Wallet[]
   bankAccounts           BankAccount[]
   settlements            Settlement[]
@@ -657,6 +673,7 @@ model Merchant {
   purchases              Purchase[]
   customers              Customer[]
   employees              Employee[]
+  payrolls               Payroll[]
   departments            Department[]
   reports                Report[]
   reportExports          ReportExport[]
@@ -693,8 +710,8 @@ model MerchantSettings {
   allowRefunds                Boolean    @default(true)
   allowChargebacks            Boolean    @default(true)
   allowPartialSettlement      Boolean    @default(false)
-  settlementAccountId         String?    // reference to BankAccount
-  defaultGatewayProviderId    String?    // gateway provider to use
+  settlementAccountId         String?
+  defaultGatewayProviderId    String?
   metadata                    Json?
   createdAt                   DateTime   @default(now())
   updatedAt                   DateTime   @updatedAt
@@ -705,7 +722,7 @@ model MerchantBranding {
   merchantId     String   @unique
   merchant       Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
   companyName    String?
-  logo           String?  // URL
+  logo           String?
   favicon        String?
   primaryColor   String?
   secondaryColor String?
@@ -735,7 +752,7 @@ model MerchantSubscription {
   paymentMethod      String?
   lastPaymentDate    DateTime?
   nextPaymentDate    DateTime?
-  featureLimits      Json?              // overrides
+  featureLimits      Json?
   metadata           Json?
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
@@ -747,7 +764,7 @@ model MerchantFeature {
   id                 String       @id @default(cuid())
   merchantId         String
   merchant           Merchant     @relation(fields: [merchantId], references: [id], onDelete: Cascade)
-  featureName        String       // e.g., "MULTI_CURRENCY", "CRYPTO_PAYOUT"
+  featureName        String
   enabled            Boolean      @default(true)
   config             Json?
   createdAt          DateTime     @default(now())
@@ -781,11 +798,11 @@ model MerchantFee {
   merchantId       String
   merchant         Merchant   @relation(fields: [merchantId], references: [id], onDelete: Cascade)
   name             String
-  type             String     // percentage, fixed
+  type             String
   amount           Decimal?   @db.Decimal(18, 4)
-  rate             Decimal?   @db.Decimal(18, 6) // if percentage
+  rate             Decimal?   @db.Decimal(18, 6)
   currency         CurrencyType @default(USD)
-  appliesTo        String?    // e.g., "transaction", "settlement", "conversion"
+  appliesTo        String?
   isActive         Boolean    @default(true)
   metadata         Json?
   createdAt        DateTime   @default(now())
@@ -817,10 +834,10 @@ model MerchantDocument {
   id               String     @id @default(cuid())
   merchantId       String
   merchant         Merchant   @relation(fields: [merchantId], references: [id], onDelete: Cascade)
-  type             String     // business_license, id, proof_of_address, etc.
+  type             String
   name             String
   fileUrl          String
-  verificationStatus String   // pending, verified, rejected
+  verificationStatus String
   rejectionReason  String?
   uploadedAt       DateTime   @default(now())
   verifiedAt       DateTime?
@@ -840,7 +857,7 @@ model MerchantContact {
   lastName         String
   email            String
   phone            String?
-  role             String?    // primary, support, etc.
+  role             String?
   isPrimary        Boolean    @default(false)
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
@@ -852,7 +869,7 @@ model MerchantAddress {
   id               String     @id @default(cuid())
   merchantId       String
   merchant         Merchant   @relation(fields: [merchantId], references: [id], onDelete: Cascade)
-  type             String     // physical, billing, shipping
+  type             String
   addressLine1     String
   addressLine2     String?
   city             String
@@ -870,9 +887,9 @@ model MerchantBusinessHours {
   id               String     @id @default(cuid())
   merchantId       String
   merchant         Merchant   @relation(fields: [merchantId], references: [id], onDelete: Cascade)
-  dayOfWeek        Int        // 0-6
-  openTime         String?    // HH:MM
-  closeTime        String?    // HH:MM
+  dayOfWeek        Int
+  openTime         String?
+  closeTime        String?
   isClosed         Boolean    @default(false)
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
@@ -903,11 +920,11 @@ model MerchantSecuritySettings {
   merchantId            String     @unique
   merchant              Merchant   @relation(fields: [merchantId], references: [id], onDelete: Cascade)
   mfaRequired           Boolean    @default(false)
-  passwordPolicy        Json?      // min length, special chars, etc.
-  sessionTimeout        Int        @default(3600) // seconds
+  passwordPolicy        Json?
+  sessionTimeout        Int        @default(3600)
   ipWhitelistEnabled    Boolean    @default(false)
   ipWhitelist           Json?
-  webhookSecret         String?    // encrypted
+  webhookSecret         String?
   apiKeyRotationDays    Int        @default(90)
   auditLogRetentionDays Int        @default(365)
   metadata              Json?
@@ -915,12 +932,16 @@ model MerchantSecuritySettings {
   updatedAt             DateTime   @updatedAt
 }
 
+// ==========================================
+// CONTINUATION – MERCHANT SETTINGS
+// ==========================================
+
 model MerchantWebhookSettings {
   id                    String     @id @default(cuid())
   merchantId            String     @unique
   merchant              Merchant   @relation(fields: [merchantId], references: [id], onDelete: Cascade)
   url                   String
-  secret                String?    // encrypted
+  secret                String?
   events                Json       // list of events
   enabled               Boolean    @default(true)
   retryCount            Int        @default(3)
@@ -945,15 +966,15 @@ model Terminal {
   firmwareVersion       String?
   softwareVersion       String?
   status                TerminalStatus   @default(OFFLINE)
-  location              String?          // store/outlet
+  location              String?
   ipAddress             String?
   macAddress            String?
   lastHeartbeatAt       DateTime?
   lastBootAt            DateTime?
   lastTransactionAt     DateTime?
-  batteryLevel          Int?             // percentage
-  storageUsed           Int?             // MB
-  memoryUsed            Int?             // MB
+  batteryLevel          Int?
+  storageUsed           Int?
+  memoryUsed            Int?
   terminalGroupId       String?
   terminalGroup         TerminalGroup?   @relation(fields: [terminalGroupId], references: [id], onDelete: SetNull)
   isActive              Boolean          @default(true)
@@ -970,13 +991,8 @@ model Terminal {
   scanner               Scanner?
   cashDrawer            CashDrawer?
   transactions          Transaction[]
-  authorization         Authorization?    // if terminal handles auth directly? We'll leave.
-  capture               Capture?          // similar
   receipts              ReceiptTemplate[]
-  device                Device?           // if terminal is a device
-  settlements           Settlement?       // maybe
-  session               TerminalSession?  // not defined yet; we can add later
-  commands              TerminalCommand?  // not defined yet
+  device                Device?
   createdAt             DateTime          @default(now())
   updatedAt             DateTime          @updatedAt
 
@@ -1014,13 +1030,13 @@ model TerminalConfiguration {
   autoPrint             Boolean    @default(true)
   signatureRequired     Boolean    @default(false)
   tipsEnabled           Boolean    @default(false)
-  tipPercentages        Json?      // e.g., [10,15,20]
+  tipPercentages        Json?
   cashbackEnabled       Boolean    @default(false)
   cashbackLimit         Decimal?   @db.Decimal(18, 4)
   offlineMode           Boolean    @default(false)
   maxOfflineTransactions Int       @default(100)
-  settlementSchedule    String?    // e.g., "daily", "manual"
-  gatewayOverride       String?    // gateway id
+  settlementSchedule    String?
+  gatewayOverride       String?
   theme                 String?
   metadata              Json?
   createdAt             DateTime   @default(now())
@@ -1031,7 +1047,7 @@ model TerminalKey {
   id                    String     @id @default(cuid())
   terminalId            String
   terminal              Terminal   @relation(fields: [terminalId], references: [id], onDelete: Cascade)
-  keyType               String     // api, encryption, signing
+  keyType               String
   keyHash               String     @unique
   label                 String?
   expiresAt             DateTime?
@@ -1048,14 +1064,14 @@ model TerminalHeartbeat {
   terminalId            String
   terminal              Terminal   @relation(fields: [terminalId], references: [id], onDelete: Cascade)
   status                TerminalStatus
-  uptime                Int?       // seconds
+  uptime                Int?
   battery               Int?
   memoryUsage           Int?
   cpuUsage              Int?
   storageFree           Int?
   networkStatus         String?
   ipAddress             String?
-  geolocation           Json?      // lat/lng
+  geolocation           Json?
   metadata              Json?
   createdAt             DateTime   @default(now())
 
@@ -1085,7 +1101,7 @@ model TerminalSoftware {
   version               String
   releaseNotes          String?
   installedAt           DateTime   @default(now())
-  status                String     // installed, pending, failed
+  status                String
   checksum              String?
   fileUrl               String?
   createdAt             DateTime   @default(now())
@@ -1115,10 +1131,10 @@ model TerminalLocation {
 
 model Device {
   id                    String     @id @default(cuid())
-  terminalId            String?    // optional, if terminal has a device
+  terminalId            String?
   terminal              Terminal?  @relation(fields: [terminalId], references: [id], onDelete: SetNull)
   name                  String
-  type                  String     // printer, scanner, cash_drawer, etc.
+  type                  String
   model                 String?
   serialNumber          String?    @unique
   status                DeviceStatusEnum @default(CONNECTED)
@@ -1136,7 +1152,7 @@ model Printer {
   id                    String     @id @default(cuid())
   terminalId            String     @unique
   terminal              Terminal   @relation(fields: [terminalId], references: [id], onDelete: Cascade)
-  type                  String     // thermal, receipt, label
+  type                  String
   paperSize             String?
   characterSet          String?
   autoCut               Boolean    @default(true)
@@ -1151,10 +1167,10 @@ model Scanner {
   id                    String     @id @default(cuid())
   terminalId            String     @unique
   terminal              Terminal   @relation(fields: [terminalId], references: [id], onDelete: Cascade)
-  type                  String     // barcode, QR, RFID
+  type                  String
   model                 String?
   resolution            String?
-  scanningMode          String?    // trigger, continuous
+  scanningMode          String?
   metadata              Json?
   createdAt             DateTime   @default(now())
   updatedAt             DateTime   @updatedAt
@@ -1164,7 +1180,7 @@ model CashDrawer {
   id                    String     @id @default(cuid())
   terminalId            String     @unique
   terminal              Terminal   @relation(fields: [terminalId], references: [id], onDelete: Cascade)
-  status                String     // open, closed
+  status                String
   openCount             Int        @default(0)
   lastOpenAt            DateTime?
   metadata              Json?
@@ -1177,9 +1193,9 @@ model ReceiptTemplate {
   merchantId            String
   merchant              Merchant   @relation(fields: [merchantId], references: [id], onDelete: Cascade)
   name                  String
-  content               String     // template with placeholders
+  content               String
   isDefault             Boolean    @default(false)
-  type                  String     // receipt, invoice, etc.
+  type                  String
   metadata              Json?
   createdAt             DateTime   @default(now())
   updatedAt             DateTime   @updatedAt
@@ -1203,9 +1219,9 @@ model Wallet {
   reservedBalance       Decimal         @default(0) @db.Decimal(18, 8)
   availableBalance      Decimal         @default(0) @db.Decimal(18, 8)
   status                WalletStatus    @default(ACTIVE)
-  address               String?         // for crypto wallets
-  blockchain            BlockchainNetwork? // if crypto
-  encryptedPrivateKey   String?         // encrypted
+  address               String?
+  blockchain            BlockchainNetwork?
+  encryptedPrivateKey   String?
   publicKey             String?
   metadata              Json?
   createdAt             DateTime        @default(now())
@@ -1216,7 +1232,7 @@ model Wallet {
   walletAddresses       WalletAddress[]
   walletKeys            WalletKey[]
   walletAudits          WalletAudit[]
-  bankAccount           BankAccount?    // if fiat settlement wallet linked to bank
+  bankAccount           BankAccount?    // if linked to bank
   settlements           Settlement[]
   settlementAttempts    SettlementAttempt?
   transactionFees       TransactionFee[]
@@ -1225,12 +1241,9 @@ model Wallet {
   disputes              Dispute[]
   cryptoConversions     CryptoConversion[]
   walletTransfers       WalletTransfer[] // from this wallet
-  incomingTransfers     WalletTransfer[] @relation("IncomingTransfer") // reverse side
+  incomingTransfers     WalletTransfer[] @relation("IncomingTransfer")
   exchangeOrders        ExchangeOrder?   // if used in exchange
   liquidityPools        LiquidityPool?   // if pool
-  kyc                   Kyc?             // if wallet requires KYC
-  createdAt             DateTime        @default(now())
-  updatedAt             DateTime        @updatedAt
 
   @@index([merchantId])
   @@index([currency])
@@ -1273,7 +1286,7 @@ model WalletKey {
   id                    String     @id @default(cuid())
   walletId              String
   wallet                Wallet     @relation(fields: [walletId], references: [id], onDelete: Cascade)
-  keyType               String     // private, public, seed
+  keyType               String
   encryptedKey          String
   keyHash               String     @unique
   label                 String?
@@ -1288,11 +1301,11 @@ model WalletAudit {
   id                    String     @id @default(cuid())
   walletId              String
   wallet                Wallet     @relation(fields: [walletId], references: [id], onDelete: Cascade)
-  action                String     // deposit, withdrawal, transfer, fee, conversion
+  action                String
   amount                Decimal    @db.Decimal(18, 8)
   balanceBefore         Decimal    @db.Decimal(18, 8)
   balanceAfter          Decimal    @db.Decimal(18, 8)
-  reference             String?    // transaction id, order id
+  reference             String?
   metadata              Json?
   createdAt             DateTime   @default(now())
 
@@ -1305,13 +1318,13 @@ model BankAccount {
   merchantId            String
   merchant              Merchant   @relation(fields: [merchantId], references: [id], onDelete: Cascade)
   accountName           String
-  accountNumber         String     // encrypted/partial
+  accountNumber         String
   bankName              String
-  routingNumber         String?    // encrypted
+  routingNumber         String?
   swiftCode             String?
-  iban                  String?    // encrypted
+  iban                  String?
   currency              CurrencyType @default(USD)
-  accountType           String     // checking, savings
+  accountType           String
   isDefault             Boolean    @default(false)
   isVerified            Boolean    @default(false)
   metadata              Json?
@@ -1326,11 +1339,11 @@ model Settlement {
   id                    String            @id @default(cuid())
   merchantId            String
   merchant              Merchant          @relation(fields: [merchantId], references: [id], onDelete: Cascade)
-  batchId               String?           // if batched
+  batchId               String?
   settlementBatch       SettlementBatch?  @relation(fields: [batchId], references: [id], onDelete: SetNull)
-  walletId              String            // source wallet
+  walletId              String
   wallet                Wallet            @relation(fields: [walletId], references: [id], onDelete: Cascade)
-  bankAccountId         String?           // destination bank account if fiat
+  bankAccountId         String?
   bankAccount           BankAccount?      @relation(fields: [bankAccountId], references: [id], onDelete: SetNull)
   amount                Decimal           @db.Decimal(18, 4)
   currency              CurrencyType      @default(USD)
@@ -1340,7 +1353,7 @@ model Settlement {
   requestedAt           DateTime          @default(now())
   processedAt           DateTime?
   completedAt           DateTime?
-  reference             String?           // external reference
+  reference             String?
   metadata              Json?
   attemptCount          Int               @default(0)
   attempts              SettlementAttempt[]
@@ -1402,7 +1415,7 @@ model SettlementFee {
   name                  String
   amount                Decimal    @db.Decimal(18, 4)
   currency              CurrencyType @default(USD)
-  type                  String     // processing, conversion, gateway
+  type                  String
   metadata              Json?
   createdAt             DateTime   @default(now())
   updatedAt             DateTime   @updatedAt
@@ -1414,10 +1427,10 @@ model SettlementSchedule {
   id                    String     @id @default(cuid())
   merchantId            String
   merchant              Merchant   @relation(fields: [merchantId], references: [id], onDelete: Cascade)
-  frequency             String     // daily, weekly, monthly, manual
-  dayOfWeek             Int?       // if weekly
-  dayOfMonth            Int?       // if monthly
-  timeOfDay             String?    // HH:MM
+  frequency             String
+  dayOfWeek             Int?
+  dayOfMonth            Int?
+  timeOfDay             String?
   minAmount             Decimal?   @db.Decimal(18, 4)
   maxAmount             Decimal?   @db.Decimal(18, 4)
   isActive              Boolean    @default(true)
@@ -1435,8 +1448,8 @@ model SettlementRule {
   merchantId            String
   merchant              Merchant   @relation(fields: [merchantId], references: [id], onDelete: Cascade)
   name                  String
-  condition             Json       // e.g., { amount: { gt: 100 } }
-  action                String     // immediate, batch, schedule
+  condition             Json
+  action                String
   priority              Int        @default(0)
   isActive              Boolean    @default(true)
   metadata              Json?
@@ -1451,9 +1464,9 @@ model ExchangeRate {
   fromCurrency          CurrencyType
   toCurrency            CurrencyType
   rate                  Decimal    @db.Decimal(18, 8)
-  source                String     // provider or API
+  source                String
   timestamp             DateTime   @default(now())
-  expiresAt             DateTime?  // if rate is valid until
+  expiresAt             DateTime?
   metadata              Json?
   createdAt             DateTime   @default(now())
 
@@ -1477,7 +1490,7 @@ model BlockchainTransaction {
   id                    String                @id @default(cuid())
   txHash                String                @unique
   blockchain            BlockchainNetwork
-  walletId              String?               // source wallet
+  walletId              String?
   wallet                Wallet?               @relation(fields: [walletId], references: [id], onDelete: SetNull)
   fromAddress           String
   toAddress             String
@@ -1489,7 +1502,7 @@ model BlockchainTransaction {
   blockNumber           Int?
   blockHash             String?
   confirmations         Int                   @default(0)
-  status                String                // pending, confirmed, failed
+  status                String
   nonce                 Int?
   data                  Json?
   metadata              Json?
@@ -1522,54 +1535,72 @@ model BlockchainConfirmation {
 
 model BlockchainFee {
   id                    String     @id @default(cuid())
-  blockchain            BlockchainNetwork
-  feeType               String     // low, medium, high, custom
+
+  blockchainId          String
+  blockchain            BlockchainNetwork   @relation(fields: [blockchainId], references: [id], onDelete: Cascade)
+
+  feeType               String
   amount                Decimal    @db.Decimal(36, 18)
   currency              CurrencyType
   timestamp             DateTime   @default(now())
   metadata              Json?
   createdAt             DateTime   @default(now())
 
-  @@index([blockchain])
+  @@index([blockchainId])
   @@index([timestamp(sort: Desc)])
 }
 
 model BlockchainNetwork {
   id                    String     @id @default(cuid())
-  name                  BlockchainNetwork @unique
-  chainId               Int?               // for EVM
+
+  name                  BlockchainNetworkType @unique
+
+  chainId               Int?
   nativeCurrency        CurrencyType
-  blockTime             Int                // seconds
+  blockTime             Int
   explorerUrl           String?
   rpcUrl                String?
   wsUrl                 String?
-  isActive              Boolean            @default(true)
+  isActive              Boolean    @default(true)
   metadata              Json?
-  createdAt             DateTime           @default(now())
-  updatedAt             DateTime           @updatedAt
+  createdAt             DateTime   @default(now())
+  updatedAt             DateTime   @updatedAt
+
+  fees                  BlockchainFee[]
+  gasPrices             GasPrice[]
+  gasHistories          GasHistory[]
+  cryptoAssets          CryptoAsset[]
+  explorer              BlockchainExplorer?
+  customerWallets       CustomerWallet[]
 }
 
 model GasPrice {
   id                    String     @id @default(cuid())
-  network               BlockchainNetwork
+
+  networkId             String
+  network               BlockchainNetwork   @relation(fields: [networkId], references: [id], onDelete: Cascade)
+
   price                 Decimal    @db.Decimal(36, 18)
   currency              CurrencyType
   timestamp             DateTime   @default(now())
   metadata              Json?
   createdAt             DateTime   @default(now())
 
-  @@index([network])
+  @@index([networkId])
   @@index([timestamp(sort: Desc)])
 }
 
 model GasHistory {
   id                    String     @id @default(cuid())
-  network               BlockchainNetwork
+
+  networkId             String
+  network               BlockchainNetwork   @relation(fields: [networkId], references: [id], onDelete: Cascade)
+
   price                 Decimal    @db.Decimal(36, 18)
   timestamp             DateTime   @default(now())
   createdAt             DateTime   @default(now())
 
-  @@index([network])
+  @@index([networkId])
   @@index([timestamp(sort: Desc)])
 }
 
@@ -1585,35 +1616,32 @@ model Transaction {
   terminal                Terminal?           @relation(fields: [terminalId], references: [id], onDelete: SetNull)
   customerId              String?
   customer                Customer?           @relation(fields: [customerId], references: [id], onDelete: SetNull)
-  walletId                String?             // settlement wallet
+  walletId                String?
   wallet                  Wallet?             @relation(fields: [walletId], references: [id], onDelete: SetNull)
   amount                  Decimal             @db.Decimal(18, 4)
   currency                CurrencyType        @default(USD)
   status                  TransactionStatus   @default(INITIATED)
-  type                    String              // sale, refund, void, auth, capture
+  type                    String
   reference               String?             @unique
   description             String?
-  gatewayTransactionId    String?             // from provider
+  gatewayTransactionId    String?
   gatewayProvider         String?
   approvalCode            String?
-  paymentMethod           String              // card, crypto, etc.
-  cardBrand               CardBrand?          // if card
+  paymentMethod           String
+  cardBrand               CardBrand?
   cardLastFour            String?
   cardExpiry              String?
   authCode                String?
   customerIP              String?
   customerUserAgent       String?
   metadata                Json?
-  // Fee fields
   feeAmount               Decimal?            @db.Decimal(18, 4)
   feeCurrency             CurrencyType?
   netAmount               Decimal?            @db.Decimal(18, 4)
-  // Settlement fields
   settlementStatus        SettlementStatus    @default(PENDING)
   settlementAmount        Decimal?            @db.Decimal(18, 4)
   settlementCurrency      CurrencyType?
   settlementDate          DateTime?
-  // Crypto conversion
   cryptoConversionId      String?
   cryptoConversion        CryptoConversion?   @relation(fields: [cryptoConversionId], references: [id], onDelete: SetNull)
   cryptoAmount            Decimal?            @db.Decimal(36, 18)
@@ -1627,20 +1655,21 @@ model Transaction {
   events                  TransactionEvent[]
   timeline                TransactionTimeline[]
   statusHistory           TransactionStatusHistory[]
-  refunds                 Refund[]            // one transaction can have multiple refunds
+  refunds                 Refund[]
   chargebacks             Chargeback[]
   disputes                Dispute[]
   authorization           Authorization?
   capture                 Capture?
   reversal                Reversal?
   voidTransaction         VoidTransaction?
-  blockchainTransaction   BlockchainTransaction? // if settled via crypto
+  blockchainTransaction   BlockchainTransaction?
   webhookDeliveries       WebhookDelivery[]
-  paymentIntent           PaymentIntent?      // if from intent
+  paymentIntent           PaymentIntent?
   paymentAttempt          PaymentAttempt?
   gatewayRequest          GatewayRequest?
   gatewayResponse         GatewayResponse?
   auditLogs               AuditLog[]          @relation("TransactionAuditLog")
+  commissions Commission[]
   createdAt               DateTime            @default(now())
   updatedAt               DateTime            @updatedAt
   deletedAt               DateTime?
@@ -1683,12 +1712,12 @@ model TransactionFee {
   id                    String     @id @default(cuid())
   transactionId         String
   transaction           Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
-  walletId              String?    // if fee deducted from wallet
+  walletId              String?
   wallet                Wallet?    @relation(fields: [walletId], references: [id], onDelete: SetNull)
   name                  String
   amount                Decimal    @db.Decimal(18, 4)
   currency              CurrencyType @default(USD)
-  type                  String     // processing, gateway, conversion, etc.
+  type                  String
   metadata              Json?
   createdAt             DateTime   @default(now())
   updatedAt             DateTime   @updatedAt
@@ -1719,7 +1748,7 @@ model TransactionDiscount {
   name                  String
   amount                Decimal    @db.Decimal(18, 4)
   currency              CurrencyType @default(USD)
-  type                  String     // percentage, fixed
+  type                  String
   metadata              Json?
   createdAt             DateTime   @default(now())
   updatedAt             DateTime   @updatedAt
@@ -1743,8 +1772,8 @@ model TransactionEvent {
   id                    String     @id @default(cuid())
   transactionId         String
   transaction           Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
-  eventType             String     // created, authorized, captured, settled, refunded, etc.
-  status                String     // status at that time
+  eventType             String
+  status                String
   description           String?
   metadata              Json?
   createdAt             DateTime   @default(now())
@@ -1773,7 +1802,7 @@ model TransactionStatusHistory {
   transaction           Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
   oldStatus             TransactionStatus
   newStatus             TransactionStatus
-  changedBy             String?    // user or system
+  changedBy             String?
   reason                String?
   metadata              Json?
   createdAt             DateTime   @default(now())
@@ -1796,8 +1825,9 @@ model Refund {
   gatewayRefundId       String?
   processedAt           DateTime?
   metadata              Json?
-  refundReason          RefundReason? // optional relation
-  walletTransfers       WalletTransfer? // if refund moves funds
+  refundReasonId        String?
+  refundReason          RefundReason? @relation(fields: [refundReasonId], references: [id], onDelete: SetNull)
+  walletTransfers       WalletTransfer?
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt
 
@@ -1837,7 +1867,7 @@ model Chargeback {
   resolvedAt            DateTime?
   metadata              Json?
   evidence              ChargebackEvidence[]
-  dispute               Dispute?         // related dispute
+  dispute               Dispute?
   createdAt             DateTime         @default(now())
   updatedAt             DateTime         @updatedAt
 
@@ -1850,7 +1880,7 @@ model ChargebackEvidence {
   id                    String     @id @default(cuid())
   chargebackId          String
   chargeback            Chargeback @relation(fields: [chargebackId], references: [id], onDelete: Cascade)
-  type                  String     // document, text, image
+  type                  String
   fileUrl               String?
   description           String?
   uploadedAt            DateTime   @default(now())
@@ -1870,7 +1900,7 @@ model Dispute {
   amount                Decimal         @db.Decimal(18, 4)
   currency              CurrencyType    @default(USD)
   status                DisputeStatus   @default(OPEN)
-  type                  String          // fraud, consumer, etc.
+  type                  String
   reason                String?
   initiatedAt           DateTime        @default(now())
   resolvedAt            DateTime?
@@ -1906,11 +1936,11 @@ model Authorization {
   authorizationCode     String?
   amount                Decimal    @db.Decimal(18, 4)
   currency              CurrencyType @default(USD)
-  status                String     // pending, approved, declined
+  status                String
   message               String?
   gatewayResponse       Json?
   authorizedAt          DateTime   @default(now())
-  expiresAt             DateTime?  // if auth expires
+  expiresAt             DateTime?
   createdAt             DateTime   @default(now())
   updatedAt             DateTime   @updatedAt
 
@@ -1923,7 +1953,7 @@ model Capture {
   transaction           Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
   amount                Decimal    @db.Decimal(18, 4)
   currency              CurrencyType @default(USD)
-  status                String     // pending, completed, failed
+  status                String
   capturedAt            DateTime   @default(now())
   gatewayResponse       Json?
   createdAt             DateTime   @default(now())
@@ -1939,7 +1969,7 @@ model Reversal {
   amount                Decimal    @db.Decimal(18, 4)
   currency              CurrencyType @default(USD)
   reason                String?
-  status                String     // pending, completed, failed
+  status                String
   reversedAt            DateTime   @default(now())
   gatewayResponse       Json?
   createdAt             DateTime   @default(now())
@@ -1953,7 +1983,7 @@ model VoidTransaction {
   transactionId         String     @unique
   transaction           Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
   reason                String?
-  status                String     // pending, completed, failed
+  status                String
   voidedAt              DateTime   @default(now())
   gatewayResponse       Json?
   createdAt             DateTime   @default(now())
@@ -1970,14 +2000,14 @@ model CardPayment {
   id                    String     @id @default(cuid())
   transactionId         String     @unique
   transaction           Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
-  cardTokenId           String?    // tokenized card
+  cardTokenId           String?
   cardToken             CardToken? @relation(fields: [cardTokenId], references: [id], onDelete: SetNull)
   cardBrand             CardBrand
   lastFour              String
   expiryMonth           Int
   expiryYear            Int
   cardHolderName        String?
-  bin                   String?    // BIN
+  bin                   String?
   gatewayResponse       Json?
   metadata              Json?
   createdAt             DateTime   @default(now())
@@ -1994,8 +2024,8 @@ model CardToken {
   merchant              Merchant   @relation(fields: [merchantId], references: [id], onDelete: Cascade)
   customerId            String?
   customer              Customer?  @relation(fields: [customerId], references: [id], onDelete: SetNull)
-  token                 String     @unique // gateway token
-  provider              String     // gateway name
+  token                 String     @unique
+  provider              String
   cardBrand             CardBrand
   lastFour              String
   expiryMonth           Int
@@ -2015,10 +2045,10 @@ model CardToken {
 
 model CardBIN {
   id                    String     @id @default(cuid())
-  bin                   String     @unique // first 6-8 digits
+  bin                   String     @unique
   brand                 CardBrand
   issuer                String?
-  cardType              String?    // credit, debit, prepaid
+  cardType              String?
   country               String?
   bankName              String?
   metadata              Json?
@@ -2034,9 +2064,9 @@ model PaymentMethod {
   merchant              Merchant        @relation(fields: [merchantId], references: [id], onDelete: Cascade)
   customerId            String?
   customer              Customer?       @relation(fields: [customerId], references: [id], onDelete: SetNull)
-  type                  String          // card, crypto, bank
-  provider              String?         // gateway
-  token                 String?         // tokenized identifier
+  type                  String
+  provider              String?
+  token                 String?
   lastFour              String?
   expiryMonth           Int?
   expiryYear            Int?
@@ -2066,11 +2096,11 @@ model PaymentIntent {
   description           String?
   clientSecret          String?          @unique
   metadata              Json?
-  transactions          Transaction[]
+  transactions          Transaction[]   // may be one or more
   paymentAttempts       PaymentAttempt[]
   createdAt             DateTime         @default(now())
   updatedAt             DateTime         @updatedAt
-  expiresAt             DateTime?        // time to expire
+  expiresAt             DateTime?
 
   @@index([merchantId])
   @@index([customerId])
@@ -2103,7 +2133,7 @@ model PaymentProvider {
   name                  String     @unique
   displayName           String
   isActive              Boolean    @default(true)
-  configSchema          Json?      // JSON schema for credentials
+  configSchema          Json?
   baseUrl               String?
   priority              Int        @default(0)
   gatewayRequests       GatewayRequest[]
@@ -2119,7 +2149,7 @@ model ProviderResponse {
   id                    String     @id @default(cuid())
   providerId            String
   provider              PaymentProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
-  requestId             String?    // reference to GatewayRequest
+  requestId             String?
   statusCode            Int
   body                  Json
   headers               Json?
@@ -2142,7 +2172,7 @@ model GatewayLog {
   responsePayload       Json?
   statusCode            Int?
   error                 String?
-  responseTime          Int?       // ms
+  responseTime          Int?
   ipAddress             String?
   createdAt             DateTime   @default(now())
 
@@ -2155,8 +2185,8 @@ model GatewayRequest {
   id                    String     @id @default(cuid())
   transactionId         String?
   transaction           Transaction? @relation(fields: [transactionId], references: [id], onDelete: SetNull)
-  provider              PaymentProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
   providerId            String
+  provider              PaymentProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
   endpoint              String
   method                String
   requestBody           Json
@@ -2178,7 +2208,7 @@ model GatewayResponse {
   responseBody          Json
   responseHeaders       Json
   error                 String?
-  responseTime          Int?       // ms
+  responseTime          Int?
   createdAt             DateTime   @default(now())
 
   @@index([gatewayRequestId])
@@ -2189,11 +2219,11 @@ model Webhook {
   merchantId            String
   merchant              Merchant        @relation(fields: [merchantId], references: [id], onDelete: Cascade)
   url                   String
-  secret                String?         // encrypted
-  events                Json            // list of events
+  secret                String?
+  events                Json
   isActive              Boolean         @default(true)
   retryCount            Int             @default(3)
-  retryDelay            Int             @default(60) // seconds
+  retryDelay            Int             @default(60)
   timeout               Int             @default(30)
   lastDeliveryAt        DateTime?
   lastSuccessAt         DateTime?
@@ -2274,8 +2304,11 @@ model CryptoAsset {
   symbol                String          @unique
   name                  String
   type                  CryptoAssetType @default(COIN)
-  blockchain            BlockchainNetwork
-  contractAddress       String?         // for tokens
+
+  blockchainId          String
+  blockchain            BlockchainNetwork   @relation(fields: [blockchainId], references: [id], onDelete: Cascade)
+
+  contractAddress       String?
   decimals              Int             @default(18)
   isActive              Boolean         @default(true)
   metadata              Json?
@@ -2283,7 +2316,7 @@ model CryptoAsset {
   updatedAt             DateTime        @updatedAt
 
   @@index([symbol])
-  @@index([blockchain])
+  @@index([blockchainId])
 }
 
 model CryptoConversion {
@@ -2296,12 +2329,12 @@ model CryptoConversion {
   toAmount              Decimal           @db.Decimal(18, 8)
   rate                  Decimal           @db.Decimal(18, 8)
   fee                   Decimal           @default(0) @db.Decimal(18, 8)
-  status                String            // pending, completed, failed
+  status                String
   exchangeProvider      String?
-  exchangeOrderId       String?           // if order placed
-  transactionId         String?           // reference transaction
+  exchangeOrderId       String?
+  transactionId         String?
   transaction           Transaction?      @relation(fields: [transactionId], references: [id], onDelete: SetNull)
-  walletTransferId      String?           // if funds moved
+  walletTransferId      String?
   walletTransfer        WalletTransfer?   @relation(fields: [walletTransferId], references: [id], onDelete: SetNull)
   metadata              Json?
   completedAt           DateTime?
@@ -2356,14 +2389,14 @@ model WalletTransfer {
   amount                Decimal    @db.Decimal(18, 8)
   currency              CurrencyType
   fee                   Decimal    @default(0) @db.Decimal(18, 8)
-  status                String     // pending, completed, failed
-  type                  String     // internal, external, settlement
+  status                String
+  type                  String
   reference             String?    @unique
-  blockchainTxId        String?    // external tx hash
-  blockchainTransaction BlockchainTransaction? @relation(fields: [blockchainTxId], references: [txHash])
+  blockchainTxId        String?
+  blockchainTransaction BlockchainTransaction? @relation(fields: [blockchainTxId], references: [txHash], onDelete: SetNull)
   metadata              Json?
   completedAt           DateTime?
-  cryptoConversionId    String?    // if conversion involved
+  cryptoConversionId    String?
   cryptoConversion      CryptoConversion? @relation(fields: [cryptoConversionId], references: [id], onDelete: SetNull)
   createdAt             DateTime   @default(now())
   updatedAt             DateTime   @updatedAt
@@ -2383,8 +2416,8 @@ model ColdWalletTransfer {
   coldWalletAddress     String
   amount                Decimal    @db.Decimal(18, 8)
   currency              CurrencyType
-  status                String     // initiated, signed, broadcast, confirmed
-  signedTransaction     String?    // hex
+  status                String
+  signedTransaction     String?
   broadcastTxHash       String?
   confirmations         Int        @default(0)
   metadata              Json?
@@ -2402,7 +2435,7 @@ model HotWalletTransfer {
   hotWalletAddress      String
   amount                Decimal    @db.Decimal(18, 8)
   currency              CurrencyType
-  status                String     // initiated, signed, broadcast, confirmed
+  status                String
   signedTransaction     String?
   broadcastTxHash       String?
   confirmations         Int        @default(0)
@@ -2425,7 +2458,7 @@ model LiquidityPool {
   availableAmount       Decimal    @db.Decimal(18, 8)
   minBalance            Decimal    @db.Decimal(18, 8)
   maxBalance            Decimal?   @db.Decimal(18, 8)
-  status                String     // active, inactive, depleted
+  status                String
   metadata              Json?
   createdAt             DateTime   @default(now())
   updatedAt             DateTime   @updatedAt
@@ -2438,8 +2471,8 @@ model ExchangeProvider {
   id                    String     @id @default(cuid())
   name                  String     @unique
   isActive              Boolean    @default(true)
-  apiKey                String?    // encrypted
-  apiSecret             String?    // encrypted
+  apiKey                String?
+  apiSecret             String?
   baseUrl               String?
   metadata              Json?
   orders                ExchangeOrder[]
@@ -2455,15 +2488,15 @@ model ExchangeOrder {
   exchangeProvider      ExchangeProvider @relation(fields: [exchangeProviderId], references: [id], onDelete: Cascade)
   merchantId            String?
   merchant              Merchant?  @relation(fields: [merchantId], references: [id], onDelete: SetNull)
-  orderId               String?    // exchange order ID
-  symbol                String     // e.g., BTC/USDT
-  side                  String     // buy, sell
-  type                  String     // market, limit
+  orderId               String?
+  symbol                String
+  side                  String
+  type                  String
   price                 Decimal?   @db.Decimal(18, 8)
   amount                Decimal    @db.Decimal(18, 8)
   filledAmount          Decimal    @default(0) @db.Decimal(18, 8)
   avgPrice              Decimal?   @db.Decimal(18, 8)
-  status                String     // pending, open, filled, cancelled, failed
+  status                String
   metadata              Json?
   trades                ExchangeTrade[]
   createdAt             DateTime   @default(now())
@@ -2479,7 +2512,7 @@ model ExchangeTrade {
   id                    String     @id @default(cuid())
   orderId               String
   order                 ExchangeOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  tradeId               String?    // exchange trade ID
+  tradeId               String?
   price                 Decimal    @db.Decimal(18, 8)
   amount                Decimal    @db.Decimal(18, 8)
   total                 Decimal    @db.Decimal(18, 8)
@@ -2514,10 +2547,13 @@ model ExchangeQuote {
 
 model BlockchainExplorer {
   id                    String     @id @default(cuid())
-  blockchain            BlockchainNetwork @unique
+
+  blockchainId          String    @unique
+  blockchain            BlockchainNetwork   @relation(fields: [blockchainId], references: [id], onDelete: Cascade)
+
   explorerUrl           String
   apiUrl                String?
-  apiKey                String?    // encrypted
+  apiKey                String?
   isActive              Boolean    @default(true)
   metadata              Json?
   createdAt             DateTime   @default(now())
@@ -2533,7 +2569,7 @@ model Kyc {
   merchantId            String         @unique
   merchant              Merchant       @relation(fields: [merchantId], references: [id], onDelete: Cascade)
   status                KycStatus      @default(NOT_STARTED)
-  type                  String         // individual, business
+  type                  String
   firstName             String?
   lastName              String?
   dob                   DateTime?
@@ -2543,8 +2579,8 @@ model Kyc {
   state                 String?
   postalCode            String?
   country               String?
-  taxId                 String?        // encrypted
-  registrationNumber    String?        // encrypted
+  taxId                 String?
+  registrationNumber    String?
   businessName          String?
   businessType          String?
   businessAddress       String?
@@ -2578,10 +2614,10 @@ model KycDocument {
   id                    String     @id @default(cuid())
   kycId                 String
   kyc                   Kyc        @relation(fields: [kycId], references: [id], onDelete: Cascade)
-  type                  String     // passport, id, proof_of_address, etc.
+  type                  String
   name                  String
   fileUrl               String
-  verificationStatus    String     // pending, verified, rejected
+  verificationStatus    String
   rejectionReason       String?
   uploadedAt            DateTime   @default(now())
   verifiedAt            DateTime?
@@ -2597,10 +2633,10 @@ model KycReview {
   id                    String     @id @default(cuid())
   kycId                 String
   kyc                   Kyc        @relation(fields: [kycId], references: [id], onDelete: Cascade)
-  reviewedBy            String?    // user ID
+  reviewedBy            String?
   status                KycStatus
   notes                 String?
-  decision              String?    // approved, rejected, pending
+  decision              String?
   metadata              Json?
   reviewedAt            DateTime   @default(now())
   createdAt             DateTime   @default(now())
@@ -2612,12 +2648,12 @@ model IdentityVerification {
   id                    String     @id @default(cuid())
   kycId                 String
   kyc                   Kyc        @relation(fields: [kycId], references: [id], onDelete: Cascade)
-  identityNumber        String?    // encrypted
+  identityNumber        String?
   documentType          String
-  documentNumber        String?    // encrypted
+  documentNumber        String?
   documentCountry       String?
   documentExpiry        DateTime?
-  verificationResult    String?    // success, failed
+  verificationResult    String?
   verificationData      Json?
   metadata              Json?
   verifiedAt            DateTime?
@@ -2637,7 +2673,7 @@ model AddressVerification {
   state                 String?
   postalCode            String?
   country               String?
-  proofDocument         String?    // file URL
+  proofDocument         String?
   verificationResult    String?
   metadata              Json?
   verifiedAt            DateTime?
@@ -2670,7 +2706,7 @@ model PEPCheck {
   kyc                   Kyc        @relation(fields: [kycId], references: [id], onDelete: Cascade)
   name                  String
   matched               Boolean
-  position              String?    // political position
+  position              String?
   country               String?
   reference             String?
   metadata              Json?
@@ -2684,10 +2720,10 @@ model RiskAssessment {
   id                    String     @id @default(cuid())
   kycId                 String
   kyc                   Kyc        @relation(fields: [kycId], references: [id], onDelete: Cascade)
-  score                 Int        // e.g., 0-100
+  score                 Int
   level                 RiskLevel  @default(LOW)
-  factors               Json?      // list of contributing factors
-  recommendedAction     String?    // approve, review, reject
+  factors               Json?
+  recommendedAction     String?
   metadata              Json?
   assessedAt            DateTime   @default(now())
   createdAt             DateTime   @default(now())
@@ -2700,9 +2736,9 @@ model AMLCheck {
   kycId                 String
   kyc                   Kyc        @relation(fields: [kycId], references: [id], onDelete: Cascade)
   status                AMLStatus  @default(CLEAR)
-  flags                 Json?      // list of flags
+  flags                 Json?
   riskScore             Int?
-  reviewedBy            String?    // user ID
+  reviewedBy            String?
   reviewNotes           String?
   metadata              Json?
   checkedAt             DateTime   @default(now())
@@ -2717,9 +2753,9 @@ model ComplianceLog {
   id                    String     @id @default(cuid())
   merchantId            String
   merchant              Merchant   @relation(fields: [merchantId], references: [id], onDelete: Cascade)
-  action                String     // e.g., "KYC Submitted", "AML Flagged"
+  action                String
   details               Json?
-  performedBy           String?    // user ID
+  performedBy           String?
   ipAddress             String?
   userAgent             String?
   createdAt             DateTime   @default(now())
@@ -2732,11 +2768,11 @@ model ComplianceReview {
   id                    String     @id @default(cuid())
   merchantId            String
   merchant              Merchant   @relation(fields: [merchantId], references: [id], onDelete: Cascade)
-  reviewType            String     // periodic, triggered
-  status                String     // pending, in_progress, completed
+  reviewType            String
+  status                String
   findings              Json?
   recommendations       Json?
-  reviewerId            String?    // user ID
+  reviewerId            String?
   reviewedAt            DateTime?
   dueDate               DateTime?
   metadata              Json?
@@ -2767,13 +2803,15 @@ model Product {
   brandId               String?
   brand                 Brand?     @relation(fields: [brandId], references: [id], onDelete: SetNull)
   weight                Decimal?   @db.Decimal(10, 2)
-  dimensions            Json?      // length, width, height
+  dimensions            Json?
   isTaxable             Boolean    @default(true)
   taxRate               Decimal?   @db.Decimal(10, 4)
   isActive              Boolean    @default(true)
   metadata              Json?
   inventory             Inventory[]
   inventoryMovements    InventoryMovement[]
+  inventoryAdjustments  InventoryAdjustment[]
+  purchaseItems         PurchaseItem[]
   createdAt             DateTime   @default(now())
   updatedAt             DateTime   @updatedAt
   deletedAt             DateTime?
@@ -2792,9 +2830,10 @@ model Category {
   merchant              Merchant   @relation(fields: [merchantId], references: [id], onDelete: Cascade)
   name                  String
   description           String?
-  parentId              String?
-  parent                Category?  @relation(fields: [parentId], references: [id], onDelete: SetNull)
-  children              Category[] @relation("CategoryChildren")
+  parentId String?
+
+  parent Category?    @relation("CategoryChildren", fields: [parentId], references: [id], onDelete: SetNull)
+  children Category[] @relation("CategoryChildren")
   products              Product[]
   createdAt             DateTime   @default(now())
   updatedAt             DateTime   @updatedAt
@@ -2830,7 +2869,7 @@ model Inventory {
   reservedQuantity      Decimal    @default(0) @db.Decimal(10, 2)
   availableQuantity     Decimal    @db.Decimal(10, 2)
   lowStockThreshold     Decimal?   @db.Decimal(10, 2)
-  location              String?    // warehouse, aisle
+  location              String?
   metadata              Json?
   movements             InventoryMovement[]
   adjustments           InventoryAdjustment[]
@@ -2850,8 +2889,8 @@ model InventoryMovement {
   productId             String
   product               Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
   quantity              Decimal    @db.Decimal(10, 2)
-  type                  String     // sale, restock, transfer, adjustment
-  reference             String?    // transaction id, purchase id
+  type                  String
+  reference             String?
   note                  String?
   beforeQuantity        Decimal    @db.Decimal(10, 2)
   afterQuantity         Decimal    @db.Decimal(10, 2)
@@ -2871,7 +2910,7 @@ model InventoryAdjustment {
   product               Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
   quantity              Decimal    @db.Decimal(10, 2)
   reason                String
-  approvedBy            String?    // user ID
+  approvedBy            String?
   note                  String?
   metadata              Json?
   createdAt             DateTime   @default(now())
@@ -2909,7 +2948,7 @@ model Purchase {
   purchaseDate          DateTime   @default(now())
   totalAmount           Decimal    @db.Decimal(18, 4)
   currency              CurrencyType @default(USD)
-  status                String     // pending, received, completed
+  status                String
   items                 PurchaseItem[]
   metadata              Json?
   createdAt             DateTime   @default(now())
@@ -2959,7 +2998,7 @@ model Customer {
   country               String?
   language              String     @default("en")
   currency              CurrencyType @default(USD)
-  status                String     // active, inactive, blocked
+  status                String
   notes                 String?
   metadata              Json?
   wallets               CustomerWallet[]
@@ -2969,9 +3008,11 @@ model Customer {
   rewards               CustomerReward[]
   loyalty               CustomerLoyalty?
   activities            CustomerActivity[]
-  notifications         CustomerNotification[]
+  customerNotifications         CustomerNotification[]
   transactions          Transaction[]
   paymentIntents        PaymentIntent[]
+  paymentMethods        PaymentMethod[]
+  notifications         Notification[]
   createdAt             DateTime   @default(now())
   updatedAt             DateTime   @updatedAt
   deletedAt             DateTime?
@@ -2987,9 +3028,14 @@ model CustomerWallet {
   id                    String     @id @default(cuid())
   customerId            String
   customer              Customer   @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  address               String     @unique
-  blockchain            BlockchainNetwork
+
+  address               String @unique
+
+  blockchainId          String
+  blockchain            BlockchainNetwork @relation(fields: [blockchainId], references: [id], onDelete: Cascade)
+
   currency              CurrencyType
+
   isPrimary             Boolean    @default(false)
   metadata              Json?
   createdAt             DateTime   @default(now())
@@ -3010,7 +3056,7 @@ model CustomerAddress {
   postalCode            String?
   country               String
   isDefault             Boolean    @default(false)
-  type                  String     // shipping, billing
+  type                  String
   metadata              Json?
   createdAt             DateTime   @default(now())
   updatedAt             DateTime   @updatedAt
@@ -3022,7 +3068,7 @@ model CustomerDevice {
   id                    String     @id @default(cuid())
   customerId            String
   customer              Customer   @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  deviceId              String     // device fingerprint
+  deviceId              String
   deviceName            String?
   deviceType            String?
   os                    String?
@@ -3042,7 +3088,7 @@ model CustomerCard {
   id                    String     @id @default(cuid())
   customerId            String
   customer              Customer   @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  token                 String     @unique // gateway token
+  token                 String     @unique
   cardBrand             CardBrand
   lastFour              String
   expiryMonth           Int
@@ -3065,7 +3111,7 @@ model CustomerReward {
   points                Int        @default(0)
   totalEarned           Int        @default(0)
   totalRedeemed         Int        @default(0)
-  tier                  String?    // bronze, silver, gold
+  tier                  String?
   expiryDate            DateTime?
   metadata              Json?
   createdAt             DateTime   @default(now())
@@ -3078,7 +3124,7 @@ model CustomerLoyalty {
   id                    String     @id @default(cuid())
   customerId            String     @unique
   customer              Customer   @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  loyaltyLevel          String     // bronze, silver, gold, platinum
+  loyaltyLevel          String
   pointsBalance         Int        @default(0)
   lifetimePoints        Int        @default(0)
   totalSpent            Decimal    @default(0) @db.Decimal(18, 4)
@@ -3093,7 +3139,7 @@ model CustomerActivity {
   id                    String     @id @default(cuid())
   customerId            String
   customer              Customer   @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  activityType          String     // login, purchase, view, etc.
+  activityType          String
   description           String?
   ipAddress             String?
   userAgent             String?
@@ -3108,7 +3154,7 @@ model CustomerNotification {
   id                    String     @id @default(cuid())
   customerId            String
   customer              Customer   @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  type                  String     // email, sms, push
+  type                  String
   subject               String?
   message               String
   sentAt                DateTime   @default(now())
@@ -3128,8 +3174,8 @@ model Employee {
   id                    String          @id @default(cuid())
   merchantId            String
   merchant              Merchant        @relation(fields: [merchantId], references: [id], onDelete: Cascade)
-  user                  User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
   userId                String?         @unique
+  user                  User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
   firstName             String
   lastName              String
   email                 String          @unique
@@ -3164,7 +3210,7 @@ model Department {
   merchant              Merchant   @relation(fields: [merchantId], references: [id], onDelete: Cascade)
   name                  String
   description           String?
-  managerId             String?    // employee ID
+  managerId             String?
   employees             Employee[]
   createdAt             DateTime   @default(now())
   updatedAt             DateTime   @updatedAt
@@ -3198,7 +3244,7 @@ model Shift {
   employee              Employee   @relation(fields: [employeeId], references: [id], onDelete: Cascade)
   startTime             DateTime
   endTime               DateTime?
-  breakDuration         Int?       // minutes
+  breakDuration         Int?
   totalHours            Decimal?   @db.Decimal(10, 2)
   metadata              Json?
   createdAt             DateTime   @default(now())
@@ -3214,7 +3260,7 @@ model ClockIn {
   employee              Employee   @relation(fields: [employeeId], references: [id], onDelete: Cascade)
   clockInTime           DateTime   @default(now())
   location              String?
-  deviceId              String?    // terminal or device
+  deviceId              String?
   metadata              Json?
   createdAt             DateTime   @default(now())
 
@@ -3243,7 +3289,7 @@ model Salary {
   employee              Employee   @relation(fields: [employeeId], references: [id], onDelete: Cascade)
   baseSalary            Decimal    @db.Decimal(18, 4)
   currency              CurrencyType @default(USD)
-  payFrequency          String     // weekly, biweekly, monthly
+  payFrequency          String
   effectiveDate         DateTime   @default(now())
   endDate               DateTime?
   metadata              Json?
@@ -3268,7 +3314,7 @@ model Payroll {
   deductions            Decimal    @default(0) @db.Decimal(18, 4)
   netPay                Decimal    @db.Decimal(18, 4)
   currency              CurrencyType @default(USD)
-  status                String     // pending, paid
+  status                String
   paidAt                DateTime?
   metadata              Json?
   createdAt             DateTime   @default(now())
@@ -3312,9 +3358,9 @@ model AuditLog {
   transactionId         String?
   transaction           Transaction? @relation(fields: [transactionId], references: [id], onDelete: SetNull, name: "TransactionAuditLog")
   action                String
-  entityType            String?    // user, merchant, transaction, etc.
+  entityType            String?
   entityId              String?
-  changes               Json?      // before/after
+  changes               Json?
   ipAddress             String?
   userAgent             String?
   metadata              Json?
@@ -3362,6 +3408,7 @@ model Notification {
   deliveredAt           DateTime?
   sentAt                DateTime           @default(now())
   metadata              Json?
+  logs                  NotificationLog[]
   createdAt             DateTime           @default(now())
   updatedAt             DateTime           @updatedAt
 
@@ -3377,7 +3424,7 @@ model NotificationLog {
   notificationId        String
   notification          Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
   channel               NotificationChannel
-  status                String     // sent, failed, delivered
+  status                String
   error                 String?
   sentAt                DateTime   @default(now())
   metadata              Json?
@@ -3392,11 +3439,11 @@ model Report {
   merchant              Merchant   @relation(fields: [merchantId], references: [id], onDelete: Cascade)
   type                  ReportType @default(DAILY)
   name                  String
-  parameters            Json?      // filters, date range
-  data                  Json?      // report data
-  fileUrl               String?    // exported file
-  format                String?    // pdf, csv, json
-  status                String     // pending, generating, completed, failed
+  parameters            Json?
+  data                  Json?
+  fileUrl               String?
+  format                String?
+  status                String
   generatedAt           DateTime   @default(now())
   completedAt           DateTime?
   expiresAt             DateTime?
@@ -3414,9 +3461,9 @@ model ReportExport {
   id                    String     @id @default(cuid())
   reportId              String
   report                Report     @relation(fields: [reportId], references: [id], onDelete: Cascade)
-  format                String     // pdf, csv, json
+  format                String
   fileUrl               String
-  fileSize              Int?       // bytes
+  fileSize              Int?
   generatedAt           DateTime   @default(now())
   expiresAt             DateTime?
   metadata              Json?
@@ -3430,9 +3477,9 @@ model DashboardWidget {
   merchantId            String
   merchant              Merchant   @relation(fields: [merchantId], references: [id], onDelete: Cascade)
   name                  String
-  type                  String     // chart, table, metric, etc.
-  config                Json       // widget configuration
-  position              Json       // x, y, width, height
+  type                  String
+  config                Json
+  position              Json
   isActive              Boolean    @default(true)
   metadata              Json?
   createdAt             DateTime   @default(now())
@@ -3447,7 +3494,7 @@ model SystemSetting {
   merchant              Merchant?  @relation(fields: [merchantId], references: [id], onDelete: Cascade)
   key                   String
   value                 Json
-  type                  String     // string, number, boolean, json
+  type                  String
   description           String?
   isGlobal              Boolean    @default(false)
   metadata              Json?
@@ -3475,11 +3522,11 @@ model SystemConfiguration {
 model Backup {
   id                    String     @id @default(cuid())
   name                  String
-  type                  String     // database, files, etc.
-  size                  Int?       // bytes
+  type                  String
+  size                  Int?
   fileUrl               String
   checksum              String?
-  status                String     // pending, completed, failed
+  status                String
   scheduled             Boolean    @default(false)
   startedAt             DateTime   @default(now())
   completedAt           DateTime?
@@ -3493,7 +3540,7 @@ model BackupHistory {
   id                    String     @id @default(cuid())
   backupId              String
   backup                Backup     @relation(fields: [backupId], references: [id], onDelete: Cascade)
-  status                String     // started, completed, failed
+  status                String
   message               String?
   metadata              Json?
   createdAt             DateTime   @default(now())

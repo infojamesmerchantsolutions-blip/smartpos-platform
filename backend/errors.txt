@@ -1,0 +1,759 @@
+Environment variables loaded from .env
+Prisma schema loaded from ../database/schema/schema.prisma
+
+Error: Prisma schema validation - (validate wasm)
+Error code: P1012
+[1;91merror[0m: [1mError validating field `user` in model `PasswordReset`: The relation field `user` on model `PasswordReset` is missing an opposite relation field on the model `User`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:435[0m
+[1;94m   | [0m
+[1;94m434 | [0m  userId      String
+[1;94m435 | [0m  [1;91muser        User     @relation(fields: [userId], references: [id], onDelete: Cascade)[0m
+[1;94m436 | [0m  expiresAt   DateTime
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `user` in model `EmailVerification`: The relation field `user` on model `EmailVerification` is missing an opposite relation field on the model `User`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:450[0m
+[1;94m   | [0m
+[1;94m449 | [0m  userId      String
+[1;94m450 | [0m  [1;91muser        User     @relation(fields: [userId], references: [id], onDelete: Cascade)[0m
+[1;94m451 | [0m  expiresAt   DateTime
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `users` in model `Role`: The relation field `users` on model `Role` is missing an opposite relation field on the model `User`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:519[0m
+[1;94m   | [0m
+[1;94m518 | [0m  permissions RolePermission[]
+[1;94m519 | [0m  [1;91musers       User[]        // optional – we keep the relation for direct assignment[0m
+[1;94m520 | [0m  createdAt   DateTime       @default(now())
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `settlementAttempts` in model `Merchant`: The relation field `settlementAttempts` on model `Merchant` is missing an opposite relation field on the model `SettlementAttempt`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:639[0m
+[1;94m   | [0m
+[1;94m638 | [0m  settlementBatches      SettlementBatch[]
+[1;94m639 | [0m  [1;91msettlementAttempts     SettlementAttempt[][0m
+[1;94m640 | [0m  settlementRules        SettlementRule[]
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `paymentAttempts` in model `Merchant`: The relation field `paymentAttempts` on model `Merchant` is missing an opposite relation field on the model `PaymentAttempt`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:647[0m
+[1;94m   | [0m
+[1;94m646 | [0m  paymentIntents         PaymentIntent[]
+[1;94m647 | [0m  [1;91mpaymentAttempts        PaymentAttempt[][0m
+[1;94m648 | [0m  webhooks               Webhook[]
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `webhookDeliveries` in model `Merchant`: The relation field `webhookDeliveries` on model `Merchant` is missing an opposite relation field on the model `WebhookDelivery`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:649[0m
+[1;94m   | [0m
+[1;94m648 | [0m  webhooks               Webhook[]
+[1;94m649 | [0m  [1;91mwebhookDeliveries      WebhookDelivery[][0m
+[1;94m650 | [0m  webhookEvents          WebhookEvent[]
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `kycDocuments` in model `Merchant`: The relation field `kycDocuments` on model `Merchant` is missing an opposite relation field on the model `KycDocument`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:652[0m
+[1;94m   | [0m
+[1;94m651 | [0m  kyc                    Kyc?
+[1;94m652 | [0m  [1;91mkycDocuments           KycDocument[][0m
+[1;94m653 | [0m  kycReviews             KycReview[]
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `kycReviews` in model `Merchant`: The relation field `kycReviews` on model `Merchant` is missing an opposite relation field on the model `KycReview`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:653[0m
+[1;94m   | [0m
+[1;94m652 | [0m  kycDocuments           KycDocument[]
+[1;94m653 | [0m  [1;91mkycReviews             KycReview[][0m
+[1;94m654 | [0m  identityVerifications  IdentityVerification[]
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `identityVerifications` in model `Merchant`: The relation field `identityVerifications` on model `Merchant` is missing an opposite relation field on the model `IdentityVerification`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:654[0m
+[1;94m   | [0m
+[1;94m653 | [0m  kycReviews             KycReview[]
+[1;94m654 | [0m  [1;91midentityVerifications  IdentityVerification[][0m
+[1;94m655 | [0m  addressVerifications   AddressVerification[]
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `addressVerifications` in model `Merchant`: The relation field `addressVerifications` on model `Merchant` is missing an opposite relation field on the model `AddressVerification`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:655[0m
+[1;94m   | [0m
+[1;94m654 | [0m  identityVerifications  IdentityVerification[]
+[1;94m655 | [0m  [1;91maddressVerifications   AddressVerification[][0m
+[1;94m656 | [0m  sanctionChecks         SanctionCheck[]
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `sanctionChecks` in model `Merchant`: The relation field `sanctionChecks` on model `Merchant` is missing an opposite relation field on the model `SanctionCheck`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:656[0m
+[1;94m   | [0m
+[1;94m655 | [0m  addressVerifications   AddressVerification[]
+[1;94m656 | [0m  [1;91msanctionChecks         SanctionCheck[][0m
+[1;94m657 | [0m  pepChecks              PEPCheck[]
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `pepChecks` in model `Merchant`: The relation field `pepChecks` on model `Merchant` is missing an opposite relation field on the model `PEPCheck`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:657[0m
+[1;94m   | [0m
+[1;94m656 | [0m  sanctionChecks         SanctionCheck[]
+[1;94m657 | [0m  [1;91mpepChecks              PEPCheck[][0m
+[1;94m658 | [0m  riskAssessments        RiskAssessment[]
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `riskAssessments` in model `Merchant`: The relation field `riskAssessments` on model `Merchant` is missing an opposite relation field on the model `RiskAssessment`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:658[0m
+[1;94m   | [0m
+[1;94m657 | [0m  pepChecks              PEPCheck[]
+[1;94m658 | [0m  [1;91mriskAssessments        RiskAssessment[][0m
+[1;94m659 | [0m  amlChecks              AMLCheck[]
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `amlChecks` in model `Merchant`: The relation field `amlChecks` on model `Merchant` is missing an opposite relation field on the model `AMLCheck`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:659[0m
+[1;94m   | [0m
+[1;94m658 | [0m  riskAssessments        RiskAssessment[]
+[1;94m659 | [0m  [1;91mamlChecks              AMLCheck[][0m
+[1;94m660 | [0m  complianceLogs         ComplianceLog[]
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `inventoryMovements` in model `Merchant`: The relation field `inventoryMovements` on model `Merchant` is missing an opposite relation field on the model `InventoryMovement`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:666[0m
+[1;94m   | [0m
+[1;94m665 | [0m  inventory              Inventory[]
+[1;94m666 | [0m  [1;91minventoryMovements     InventoryMovement[][0m
+[1;94m667 | [0m  inventoryAdjustments   InventoryAdjustment[]
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `inventoryAdjustments` in model `Merchant`: The relation field `inventoryAdjustments` on model `Merchant` is missing an opposite relation field on the model `InventoryAdjustment`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:667[0m
+[1;94m   | [0m
+[1;94m666 | [0m  inventoryMovements     InventoryMovement[]
+[1;94m667 | [0m  [1;91minventoryAdjustments   InventoryAdjustment[][0m
+[1;94m668 | [0m  suppliers              Supplier[]
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `reportExports` in model `Merchant`: The relation field `reportExports` on model `Merchant` is missing an opposite relation field on the model `ReportExport`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:675[0m
+[1;94m   | [0m
+[1;94m674 | [0m  reports                Report[]
+[1;94m675 | [0m  [1;91mreportExports          ReportExport[][0m
+[1;94m676 | [0m  dashboardWidgets       DashboardWidget[]
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `receipts` in model `Terminal`: The relation field `receipts` on model `Terminal` is missing an opposite relation field on the model `ReceiptTemplate`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:990[0m
+[1;94m   | [0m
+[1;94m989 | [0m  transactions          Transaction[]
+[1;94m990 | [0m  [1;91mreceipts              ReceiptTemplate[][0m
+[1;94m991 | [0m  device                Device?
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `merchant` in model `TerminalGroup`: The relation field `merchant` on model `TerminalGroup` is missing an opposite relation field on the model `Merchant`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1006[0m
+[1;94m   | [0m
+[1;94m1005 | [0m  merchantId            String
+[1;94m1006 | [0m  [1;91mmerchant              Merchant         @relation(fields: [merchantId], references: [id], onDelete: Cascade)[0m
+[1;94m1007 | [0m  description           String?
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": A one-to-one relation must use unique fields on the defining side. Either add an `@unique` attribute to the field `terminalId`, or change the relation to one-to-many.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1131[0m
+[1;94m   | [0m
+[1;94m1130 | [0m  terminalId            String?
+[1;94m1131 | [0m  [1;91mterminal              Terminal?  @relation(fields: [terminalId], references: [id], onDelete: SetNull)[0m
+[1;94m1132 | [0m  name                  String
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `merchant` in model `ReceiptTemplate`: The relation field `merchant` on model `ReceiptTemplate` is missing an opposite relation field on the model `Merchant`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1190[0m
+[1;94m   | [0m
+[1;94m1189 | [0m  merchantId            String
+[1;94m1190 | [0m  [1;91mmerchant              Merchant   @relation(fields: [merchantId], references: [id], onDelete: Cascade)[0m
+[1;94m1191 | [0m  name                  String
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The given constraint name `Wallet__fkey` has to be unique in the following namespace: on model `Wallet` for primary key, indexes, unique constraints and foreign keys. Please provide a different name using the `map` argument.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1219[0m
+[1;94m   | [0m
+[1;94m1218 | [0m  address               String?
+[1;94m1219 | [0m  [1;91mblockchain            BlockchainNetwork?[0m
+[1;94m1220 | [0m  encryptedPrivateKey   String?
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `blockchain` in model `Wallet`: The relation field `blockchain` on model `Wallet` is missing an opposite relation field on the model `BlockchainNetwork`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1219[0m
+[1;94m   | [0m
+[1;94m1218 | [0m  address               String?
+[1;94m1219 | [0m  [1;91mblockchain            BlockchainNetwork?[0m
+[1;94m1220 | [0m  encryptedPrivateKey   String?
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The given constraint name `Wallet__fkey` has to be unique in the following namespace: on model `Wallet` for primary key, indexes, unique constraints and foreign keys. Please provide a different name using the `map` argument.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1231[0m
+[1;94m   | [0m
+[1;94m1230 | [0m  walletAudits          WalletAudit[]
+[1;94m1231 | [0m  [1;91mbankAccount           BankAccount?    // if linked to bank[0m
+[1;94m1232 | [0m  settlements           Settlement[]
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `bankAccount` in model `Wallet`: The relation field `bankAccount` on model `Wallet` is missing an opposite relation field on the model `BankAccount`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1231[0m
+[1;94m   | [0m
+[1;94m1230 | [0m  walletAudits          WalletAudit[]
+[1;94m1231 | [0m  [1;91mbankAccount           BankAccount?    // if linked to bank[0m
+[1;94m1232 | [0m  settlements           Settlement[]
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The given constraint name `Wallet__fkey` has to be unique in the following namespace: on model `Wallet` for primary key, indexes, unique constraints and foreign keys. Please provide a different name using the `map` argument.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1233[0m
+[1;94m   | [0m
+[1;94m1232 | [0m  settlements           Settlement[]
+[1;94m1233 | [0m  [1;91msettlementAttempts    SettlementAttempt?[0m
+[1;94m1234 | [0m  transactionFees       TransactionFee[]
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `settlementAttempts` in model `Wallet`: The relation field `settlementAttempts` on model `Wallet` is missing an opposite relation field on the model `SettlementAttempt`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1233[0m
+[1;94m   | [0m
+[1;94m1232 | [0m  settlements           Settlement[]
+[1;94m1233 | [0m  [1;91msettlementAttempts    SettlementAttempt?[0m
+[1;94m1234 | [0m  transactionFees       TransactionFee[]
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `refunds` in model `Wallet`: The relation field `refunds` on model `Wallet` is missing an opposite relation field on the model `Refund`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1235[0m
+[1;94m   | [0m
+[1;94m1234 | [0m  transactionFees       TransactionFee[]
+[1;94m1235 | [0m  [1;91mrefunds               Refund[][0m
+[1;94m1236 | [0m  chargebacks           Chargeback[]
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `chargebacks` in model `Wallet`: The relation field `chargebacks` on model `Wallet` is missing an opposite relation field on the model `Chargeback`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1236[0m
+[1;94m   | [0m
+[1;94m1235 | [0m  refunds               Refund[]
+[1;94m1236 | [0m  [1;91mchargebacks           Chargeback[][0m
+[1;94m1237 | [0m  disputes              Dispute[]
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `disputes` in model `Wallet`: The relation field `disputes` on model `Wallet` is missing an opposite relation field on the model `Dispute`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1237[0m
+[1;94m   | [0m
+[1;94m1236 | [0m  chargebacks           Chargeback[]
+[1;94m1237 | [0m  [1;91mdisputes              Dispute[][0m
+[1;94m1238 | [0m  cryptoConversions     CryptoConversion[]
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `cryptoConversions` in model `Wallet`: The relation field `cryptoConversions` on model `Wallet` is missing an opposite relation field on the model `CryptoConversion`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1238[0m
+[1;94m   | [0m
+[1;94m1237 | [0m  disputes              Dispute[]
+[1;94m1238 | [0m  [1;91mcryptoConversions     CryptoConversion[][0m
+[1;94m1239 | [0m  walletTransfers       WalletTransfer[] // from this wallet
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `walletTransfers` in model `Wallet`: The relation field `walletTransfers` on model `Wallet` is missing an opposite relation field on the model `WalletTransfer`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1239[0m
+[1;94m   | [0m
+[1;94m1238 | [0m  cryptoConversions     CryptoConversion[]
+[1;94m1239 | [0m  [1;91mwalletTransfers       WalletTransfer[] // from this wallet[0m
+[1;94m1240 | [0m  incomingTransfers     WalletTransfer[] @relation("IncomingTransfer")
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `incomingTransfers` in model `Wallet`: The relation field `incomingTransfers` on model `Wallet` is missing an opposite relation field on the model `WalletTransfer`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1240[0m
+[1;94m   | [0m
+[1;94m1239 | [0m  walletTransfers       WalletTransfer[] // from this wallet
+[1;94m1240 | [0m  [1;91mincomingTransfers     WalletTransfer[] @relation("IncomingTransfer")[0m
+[1;94m1241 | [0m  exchangeOrders        ExchangeOrder?   // if used in exchange
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The given constraint name `Wallet__fkey` has to be unique in the following namespace: on model `Wallet` for primary key, indexes, unique constraints and foreign keys. Please provide a different name using the `map` argument.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1241[0m
+[1;94m   | [0m
+[1;94m1240 | [0m  incomingTransfers     WalletTransfer[] @relation("IncomingTransfer")
+[1;94m1241 | [0m  [1;91mexchangeOrders        ExchangeOrder?   // if used in exchange[0m
+[1;94m1242 | [0m  liquidityPools        LiquidityPool?   // if pool
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `exchangeOrders` in model `Wallet`: The relation field `exchangeOrders` on model `Wallet` is missing an opposite relation field on the model `ExchangeOrder`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1241[0m
+[1;94m   | [0m
+[1;94m1240 | [0m  incomingTransfers     WalletTransfer[] @relation("IncomingTransfer")
+[1;94m1241 | [0m  [1;91mexchangeOrders        ExchangeOrder?   // if used in exchange[0m
+[1;94m1242 | [0m  liquidityPools        LiquidityPool?   // if pool
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The given constraint name `Wallet__fkey` has to be unique in the following namespace: on model `Wallet` for primary key, indexes, unique constraints and foreign keys. Please provide a different name using the `map` argument.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1242[0m
+[1;94m   | [0m
+[1;94m1241 | [0m  exchangeOrders        ExchangeOrder?   // if used in exchange
+[1;94m1242 | [0m  [1;91mliquidityPools        LiquidityPool?   // if pool[0m
+[1;94m1243 | [0m
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `liquidityPools` in model `Wallet`: The relation field `liquidityPools` on model `Wallet` is missing an opposite relation field on the model `LiquidityPool`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1242[0m
+[1;94m   | [0m
+[1;94m1241 | [0m  exchangeOrders        ExchangeOrder?   // if used in exchange
+[1;94m1242 | [0m  [1;91mliquidityPools        LiquidityPool?   // if pool[0m
+[1;94m1243 | [0m
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `blockchain` in model `WalletAddress`: The relation field `blockchain` on model `WalletAddress` is missing an opposite relation field on the model `BlockchainNetwork`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1271[0m
+[1;94m   | [0m
+[1;94m1270 | [0m  address               String     @unique
+[1;94m1271 | [0m  [1;91mblockchain            BlockchainNetwork[0m
+[1;94m1272 | [0m  isActive              Boolean    @default(true)
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `bankAccount` in model `Settlement`: The relation field `bankAccount` on model `Settlement` is missing an opposite relation field on the model `BankAccount`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1343[0m
+[1;94m   | [0m
+[1;94m1342 | [0m  bankAccountId         String?
+[1;94m1343 | [0m  [1;91mbankAccount           BankAccount?      @relation(fields: [bankAccountId], references: [id], onDelete: SetNull)[0m
+[1;94m1344 | [0m  amount                Decimal           @db.Decimal(18, 4)
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `settlementSchedules` in model `Settlement`: The relation field `settlementSchedules` on model `Settlement` is missing an opposite relation field on the model `SettlementSchedule`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1357[0m
+[1;94m   | [0m
+[1;94m1356 | [0m  fees                  SettlementFee[]
+[1;94m1357 | [0m  [1;91msettlementSchedules   SettlementSchedule? // if scheduled[0m
+[1;94m1358 | [0m  createdAt             DateTime          @default(now())
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `blockchain` in model `BlockchainTransaction`: The relation field `blockchain` on model `BlockchainTransaction` is missing an opposite relation field on the model `BlockchainNetwork`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1488[0m
+[1;94m   | [0m
+[1;94m1487 | [0m  txHash                String                @unique
+[1;94m1488 | [0m  [1;91mblockchain            BlockchainNetwork[0m
+[1;94m1489 | [0m  walletId              String?
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `wallet` in model `BlockchainTransaction`: The relation field `wallet` on model `BlockchainTransaction` is missing an opposite relation field on the model `Wallet`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1490[0m
+[1;94m   | [0m
+[1;94m1489 | [0m  walletId              String?
+[1;94m1490 | [0m  [1;91mwallet                Wallet?               @relation(fields: [walletId], references: [id], onDelete: SetNull)[0m
+[1;94m1491 | [0m  fromAddress           String
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `wallet` in model `Transaction`: The relation field `wallet` on model `Transaction` is missing an opposite relation field on the model `Wallet`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1616[0m
+[1;94m   | [0m
+[1;94m1615 | [0m  walletId                String?
+[1;94m1616 | [0m  [1;91mwallet                  Wallet?             @relation(fields: [walletId], references: [id], onDelete: SetNull)[0m
+[1;94m1617 | [0m  amount                  Decimal             @db.Decimal(18, 4)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The relation fields `cryptoConversion` on Model `Transaction` and `transaction` on Model `CryptoConversion` both provide the `references` argument in the @relation attribute. You have to provide it only on one of the two fields.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1642[0m
+[1;94m   | [0m
+[1;94m1641 | [0m  cryptoConversionId      String?
+[1;94m1642 | [0m  [1;91mcryptoConversion        CryptoConversion?   @relation(fields: [cryptoConversionId], references: [id], onDelete: SetNull)[0m
+[1;94m1643 | [0m  cryptoAmount            Decimal?            @db.Decimal(36, 18)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The relation fields `cryptoConversion` on Model `Transaction` and `transaction` on Model `CryptoConversion` both provide the `references` argument in the @relation attribute. You have to provide it only on one of the two fields.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2331[0m
+[1;94m   | [0m
+[1;94m2330 | [0m  transactionId         String?
+[1;94m2331 | [0m  [1;91mtransaction           Transaction?      @relation(fields: [transactionId], references: [id], onDelete: SetNull)[0m
+[1;94m2332 | [0m  walletTransferId      String?
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The relation fields `cryptoConversion` on Model `Transaction` and `transaction` on Model `CryptoConversion` both provide the `fields` argument in the @relation attribute. You have to provide it only on one of the two fields.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1642[0m
+[1;94m   | [0m
+[1;94m1641 | [0m  cryptoConversionId      String?
+[1;94m1642 | [0m  [1;91mcryptoConversion        CryptoConversion?   @relation(fields: [cryptoConversionId], references: [id], onDelete: SetNull)[0m
+[1;94m1643 | [0m  cryptoAmount            Decimal?            @db.Decimal(36, 18)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The relation fields `cryptoConversion` on Model `Transaction` and `transaction` on Model `CryptoConversion` both provide the `fields` argument in the @relation attribute. You have to provide it only on one of the two fields.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2331[0m
+[1;94m   | [0m
+[1;94m2330 | [0m  transactionId         String?
+[1;94m2331 | [0m  [1;91mtransaction           Transaction?      @relation(fields: [transactionId], references: [id], onDelete: SetNull)[0m
+[1;94m2332 | [0m  walletTransferId      String?
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The relation fields `transaction` on Model `CryptoConversion` and `cryptoConversion` on Model `Transaction` both provide the `onDelete` or `onUpdate` argument in the @relation attribute. You have to provide it only on one of the two fields.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2331[0m
+[1;94m   | [0m
+[1;94m2330 | [0m  transactionId         String?
+[1;94m2331 | [0m  [1;91mtransaction           Transaction?      @relation(fields: [transactionId], references: [id], onDelete: SetNull)[0m
+[1;94m2332 | [0m  walletTransferId      String?
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The relation fields `cryptoConversion` on Model `Transaction` and `transaction` on Model `CryptoConversion` both provide the `onDelete` or `onUpdate` argument in the @relation attribute. You have to provide it only on one of the two fields.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1642[0m
+[1;94m   | [0m
+[1;94m1641 | [0m  cryptoConversionId      String?
+[1;94m1642 | [0m  [1;91mcryptoConversion        CryptoConversion?   @relation(fields: [cryptoConversionId], references: [id], onDelete: SetNull)[0m
+[1;94m1643 | [0m  cryptoAmount            Decimal?            @db.Decimal(36, 18)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": A one-to-one relation must use unique fields on the defining side. Either add an `@unique` attribute to the field `cryptoConversionId`, or change the relation to one-to-many.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1642[0m
+[1;94m   | [0m
+[1;94m1641 | [0m  cryptoConversionId      String?
+[1;94m1642 | [0m  [1;91mcryptoConversion        CryptoConversion?   @relation(fields: [cryptoConversionId], references: [id], onDelete: SetNull)[0m
+[1;94m1643 | [0m  cryptoAmount            Decimal?            @db.Decimal(36, 18)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The given constraint name `Transaction__fkey` has to be unique in the following namespace: on model `Transaction` for primary key, indexes, unique constraints and foreign keys. Please provide a different name using the `map` argument.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1661[0m
+[1;94m   | [0m
+[1;94m1660 | [0m  voidTransaction         VoidTransaction?
+[1;94m1661 | [0m  [1;91mblockchainTransaction   BlockchainTransaction?[0m
+[1;94m1662 | [0m  webhookDeliveries       WebhookDelivery[]
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `blockchainTransaction` in model `Transaction`: The relation field `blockchainTransaction` on model `Transaction` is missing an opposite relation field on the model `BlockchainTransaction`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1661[0m
+[1;94m   | [0m
+[1;94m1660 | [0m  voidTransaction         VoidTransaction?
+[1;94m1661 | [0m  [1;91mblockchainTransaction   BlockchainTransaction?[0m
+[1;94m1662 | [0m  webhookDeliveries       WebhookDelivery[]
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The given constraint name `Transaction__fkey` has to be unique in the following namespace: on model `Transaction` for primary key, indexes, unique constraints and foreign keys. Please provide a different name using the `map` argument.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1663[0m
+[1;94m   | [0m
+[1;94m1662 | [0m  webhookDeliveries       WebhookDelivery[]
+[1;94m1663 | [0m  [1;91mpaymentIntent           PaymentIntent?[0m
+[1;94m1664 | [0m  paymentAttempt          PaymentAttempt?
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The relation field `paymentIntent` on Model `Transaction` must specify the `fields` argument in the @relation attribute. You can run `prisma format` to fix this automatically.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1663[0m
+[1;94m   | [0m
+[1;94m1662 | [0m  webhookDeliveries       WebhookDelivery[]
+[1;94m1663 | [0m  [1;91mpaymentIntent           PaymentIntent?[0m
+[1;94m1664 | [0m  paymentAttempt          PaymentAttempt?
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The relation field `paymentIntent` on Model `Transaction` must specify the `references` argument in the @relation attribute.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1663[0m
+[1;94m   | [0m
+[1;94m1662 | [0m  webhookDeliveries       WebhookDelivery[]
+[1;94m1663 | [0m  [1;91mpaymentIntent           PaymentIntent?[0m
+[1;94m1664 | [0m  paymentAttempt          PaymentAttempt?
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The given constraint name `Transaction__fkey` has to be unique in the following namespace: on model `Transaction` for primary key, indexes, unique constraints and foreign keys. Please provide a different name using the `map` argument.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1666[0m
+[1;94m   | [0m
+[1;94m1665 | [0m  gatewayRequest          GatewayRequest?
+[1;94m1666 | [0m  [1;91mgatewayResponse         GatewayResponse?[0m
+[1;94m1667 | [0m  auditLogs               AuditLog[]          @relation("TransactionAuditLog")
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `gatewayResponse` in model `Transaction`: The relation field `gatewayResponse` on model `Transaction` is missing an opposite relation field on the model `GatewayResponse`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1666[0m
+[1;94m   | [0m
+[1;94m1665 | [0m  gatewayRequest          GatewayRequest?
+[1;94m1666 | [0m  [1;91mgatewayResponse         GatewayResponse?[0m
+[1;94m1667 | [0m  auditLogs               AuditLog[]          @relation("TransactionAuditLog")
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `product` in model `TransactionItem`: The relation field `product` on model `TransactionItem` is missing an opposite relation field on the model `Product`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1689[0m
+[1;94m   | [0m
+[1;94m1688 | [0m  productId             String?
+[1;94m1689 | [0m  [1;91mproduct               Product?   @relation(fields: [productId], references: [id], onDelete: SetNull)[0m
+[1;94m1690 | [0m  sku                   String?
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `walletTransfers` in model `Refund`: The relation field `walletTransfers` on model `Refund` is missing an opposite relation field on the model `WalletTransfer`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1825[0m
+[1;94m   | [0m
+[1;94m1824 | [0m  refundReason          RefundReason? @relation(fields: [refundReasonId], references: [id], onDelete: SetNull)
+[1;94m1825 | [0m  [1;91mwalletTransfers       WalletTransfer?[0m
+[1;94m1826 | [0m  createdAt             DateTime      @default(now())
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `merchant` in model `RefundReason`: The relation field `merchant` on model `RefundReason` is missing an opposite relation field on the model `Merchant`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1838[0m
+[1;94m   | [0m
+[1;94m1837 | [0m  merchantId            String
+[1;94m1838 | [0m  [1;91mmerchant              Merchant   @relation(fields: [merchantId], references: [id], onDelete: Cascade)[0m
+[1;94m1839 | [0m  reason                String     @unique
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `dispute` in model `Chargeback`: The relation field `dispute` on model `Chargeback` is missing an opposite relation field on the model `Dispute`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1865[0m
+[1;94m   | [0m
+[1;94m1864 | [0m  evidence              ChargebackEvidence[]
+[1;94m1865 | [0m  [1;91mdispute               Dispute?[0m
+[1;94m1866 | [0m  createdAt             DateTime         @default(now())
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `transaction` in model `CardPayment`: The relation field `transaction` on model `CardPayment` is missing an opposite relation field on the model `Transaction`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1997[0m
+[1;94m   | [0m
+[1;94m1996 | [0m  transactionId         String     @unique
+[1;94m1997 | [0m  [1;91mtransaction           Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)[0m
+[1;94m1998 | [0m  cardTokenId           String?
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `merchant` in model `CardToken`: The relation field `merchant` on model `CardToken` is missing an opposite relation field on the model `Merchant`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2019[0m
+[1;94m   | [0m
+[1;94m2018 | [0m  merchantId            String
+[1;94m2019 | [0m  [1;91mmerchant              Merchant   @relation(fields: [merchantId], references: [id], onDelete: Cascade)[0m
+[1;94m2020 | [0m  customerId            String?
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `customer` in model `CardToken`: The relation field `customer` on model `CardToken` is missing an opposite relation field on the model `Customer`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2021[0m
+[1;94m   | [0m
+[1;94m2020 | [0m  customerId            String?
+[1;94m2021 | [0m  [1;91mcustomer              Customer?  @relation(fields: [customerId], references: [id], onDelete: SetNull)[0m
+[1;94m2022 | [0m  token                 String     @unique
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `merchant` in model `PaymentMethod`: The relation field `merchant` on model `PaymentMethod` is missing an opposite relation field on the model `Merchant`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2059[0m
+[1;94m   | [0m
+[1;94m2058 | [0m  merchantId            String
+[1;94m2059 | [0m  [1;91mmerchant              Merchant        @relation(fields: [merchantId], references: [id], onDelete: Cascade)[0m
+[1;94m2060 | [0m  customerId            String?
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": A one-to-one relation must use unique fields on the defining side. Either add an `@unique` attribute to the field `transactionId`, or change the relation to one-to-many.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2111[0m
+[1;94m   | [0m
+[1;94m2110 | [0m  transactionId         String?        // resulting transaction
+[1;94m2111 | [0m  [1;91mtransaction           Transaction?   @relation(fields: [transactionId], references: [id], onDelete: SetNull)[0m
+[1;94m2112 | [0m  amount                Decimal        @db.Decimal(18, 4)
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `gatewayResponses` in model `PaymentProvider`: The relation field `gatewayResponses` on model `PaymentProvider` is missing an opposite relation field on the model `GatewayResponse`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2135[0m
+[1;94m   | [0m
+[1;94m2134 | [0m  gatewayRequests       GatewayRequest[]
+[1;94m2135 | [0m  [1;91mgatewayResponses      GatewayResponse[][0m
+[1;94m2136 | [0m  createdAt             DateTime   @default(now())
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `provider` in model `ProviderResponse`: The relation field `provider` on model `ProviderResponse` is missing an opposite relation field on the model `PaymentProvider`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2146[0m
+[1;94m   | [0m
+[1;94m2145 | [0m  providerId            String
+[1;94m2146 | [0m  [1;91mprovider              PaymentProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)[0m
+[1;94m2147 | [0m  requestId             String?
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `merchant` in model `GatewayLog`: The relation field `merchant` on model `GatewayLog` is missing an opposite relation field on the model `Merchant`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2162[0m
+[1;94m   | [0m
+[1;94m2161 | [0m  merchantId            String?
+[1;94m2162 | [0m  [1;91mmerchant              Merchant?  @relation(fields: [merchantId], references: [id], onDelete: SetNull)[0m
+[1;94m2163 | [0m  provider              String
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": A one-to-one relation must use unique fields on the defining side. Either add an `@unique` attribute to the field `transactionId`, or change the relation to one-to-many.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2182[0m
+[1;94m   | [0m
+[1;94m2181 | [0m  transactionId         String?
+[1;94m2182 | [0m  [1;91mtransaction           Transaction? @relation(fields: [transactionId], references: [id], onDelete: SetNull)[0m
+[1;94m2183 | [0m  providerId            String
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `webhookDelivery` in model `WebhookRetry`: The relation field `webhookDelivery` on model `WebhookRetry` is missing an opposite relation field on the model `WebhookDelivery`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2279[0m
+[1;94m   | [0m
+[1;94m2278 | [0m  webhookDeliveryId     String
+[1;94m2279 | [0m  [1;91mwebhookDelivery       WebhookDelivery @relation(fields: [webhookDeliveryId], references: [id], onDelete: Cascade)[0m
+[1;94m2280 | [0m  attemptNumber         Int
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `merchant` in model `CryptoConversion`: The relation field `merchant` on model `CryptoConversion` is missing an opposite relation field on the model `Merchant`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2320[0m
+[1;94m   | [0m
+[1;94m2319 | [0m  merchantId            String
+[1;94m2320 | [0m  [1;91mmerchant              Merchant          @relation(fields: [merchantId], references: [id], onDelete: Cascade)[0m
+[1;94m2321 | [0m  fromCurrency          CurrencyType
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The relation fields `transaction` on Model `CryptoConversion` and `cryptoConversion` on Model `Transaction` both provide the `references` argument in the @relation attribute. You have to provide it only on one of the two fields.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2331[0m
+[1;94m   | [0m
+[1;94m2330 | [0m  transactionId         String?
+[1;94m2331 | [0m  [1;91mtransaction           Transaction?      @relation(fields: [transactionId], references: [id], onDelete: SetNull)[0m
+[1;94m2332 | [0m  walletTransferId      String?
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The relation fields `transaction` on Model `CryptoConversion` and `cryptoConversion` on Model `Transaction` both provide the `references` argument in the @relation attribute. You have to provide it only on one of the two fields.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1642[0m
+[1;94m   | [0m
+[1;94m1641 | [0m  cryptoConversionId      String?
+[1;94m1642 | [0m  [1;91mcryptoConversion        CryptoConversion?   @relation(fields: [cryptoConversionId], references: [id], onDelete: SetNull)[0m
+[1;94m1643 | [0m  cryptoAmount            Decimal?            @db.Decimal(36, 18)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The relation fields `transaction` on Model `CryptoConversion` and `cryptoConversion` on Model `Transaction` both provide the `fields` argument in the @relation attribute. You have to provide it only on one of the two fields.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2331[0m
+[1;94m   | [0m
+[1;94m2330 | [0m  transactionId         String?
+[1;94m2331 | [0m  [1;91mtransaction           Transaction?      @relation(fields: [transactionId], references: [id], onDelete: SetNull)[0m
+[1;94m2332 | [0m  walletTransferId      String?
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The relation fields `transaction` on Model `CryptoConversion` and `cryptoConversion` on Model `Transaction` both provide the `fields` argument in the @relation attribute. You have to provide it only on one of the two fields.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1642[0m
+[1;94m   | [0m
+[1;94m1641 | [0m  cryptoConversionId      String?
+[1;94m1642 | [0m  [1;91mcryptoConversion        CryptoConversion?   @relation(fields: [cryptoConversionId], references: [id], onDelete: SetNull)[0m
+[1;94m1643 | [0m  cryptoAmount            Decimal?            @db.Decimal(36, 18)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The relation fields `cryptoConversion` on Model `Transaction` and `transaction` on Model `CryptoConversion` both provide the `onDelete` or `onUpdate` argument in the @relation attribute. You have to provide it only on one of the two fields.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:1642[0m
+[1;94m   | [0m
+[1;94m1641 | [0m  cryptoConversionId      String?
+[1;94m1642 | [0m  [1;91mcryptoConversion        CryptoConversion?   @relation(fields: [cryptoConversionId], references: [id], onDelete: SetNull)[0m
+[1;94m1643 | [0m  cryptoAmount            Decimal?            @db.Decimal(36, 18)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The relation fields `transaction` on Model `CryptoConversion` and `cryptoConversion` on Model `Transaction` both provide the `onDelete` or `onUpdate` argument in the @relation attribute. You have to provide it only on one of the two fields.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2331[0m
+[1;94m   | [0m
+[1;94m2330 | [0m  transactionId         String?
+[1;94m2331 | [0m  [1;91mtransaction           Transaction?      @relation(fields: [transactionId], references: [id], onDelete: SetNull)[0m
+[1;94m2332 | [0m  walletTransferId      String?
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": A one-to-one relation must use unique fields on the defining side. Either add an `@unique` attribute to the field `transactionId`, or change the relation to one-to-many.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2331[0m
+[1;94m   | [0m
+[1;94m2330 | [0m  transactionId         String?
+[1;94m2331 | [0m  [1;91mtransaction           Transaction?      @relation(fields: [transactionId], references: [id], onDelete: SetNull)[0m
+[1;94m2332 | [0m  walletTransferId      String?
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The relation fields `walletTransfer` on Model `CryptoConversion` and `cryptoConversion` on Model `WalletTransfer` both provide the `references` argument in the @relation attribute. You have to provide it only on one of the two fields.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2333[0m
+[1;94m   | [0m
+[1;94m2332 | [0m  walletTransferId      String?
+[1;94m2333 | [0m  [1;91mwalletTransfer        WalletTransfer?   @relation(fields: [walletTransferId], references: [id], onDelete: SetNull)[0m
+[1;94m2334 | [0m  metadata              Json?
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The relation fields `walletTransfer` on Model `CryptoConversion` and `cryptoConversion` on Model `WalletTransfer` both provide the `references` argument in the @relation attribute. You have to provide it only on one of the two fields.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2395[0m
+[1;94m   | [0m
+[1;94m2394 | [0m  cryptoConversionId    String?
+[1;94m2395 | [0m  [1;91mcryptoConversion      CryptoConversion? @relation(fields: [cryptoConversionId], references: [id], onDelete: SetNull)[0m
+[1;94m2396 | [0m  createdAt             DateTime   @default(now())
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The relation fields `walletTransfer` on Model `CryptoConversion` and `cryptoConversion` on Model `WalletTransfer` both provide the `fields` argument in the @relation attribute. You have to provide it only on one of the two fields.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2333[0m
+[1;94m   | [0m
+[1;94m2332 | [0m  walletTransferId      String?
+[1;94m2333 | [0m  [1;91mwalletTransfer        WalletTransfer?   @relation(fields: [walletTransferId], references: [id], onDelete: SetNull)[0m
+[1;94m2334 | [0m  metadata              Json?
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The relation fields `walletTransfer` on Model `CryptoConversion` and `cryptoConversion` on Model `WalletTransfer` both provide the `fields` argument in the @relation attribute. You have to provide it only on one of the two fields.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2395[0m
+[1;94m   | [0m
+[1;94m2394 | [0m  cryptoConversionId    String?
+[1;94m2395 | [0m  [1;91mcryptoConversion      CryptoConversion? @relation(fields: [cryptoConversionId], references: [id], onDelete: SetNull)[0m
+[1;94m2396 | [0m  createdAt             DateTime   @default(now())
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The relation fields `cryptoConversion` on Model `WalletTransfer` and `walletTransfer` on Model `CryptoConversion` both provide the `onDelete` or `onUpdate` argument in the @relation attribute. You have to provide it only on one of the two fields.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2395[0m
+[1;94m   | [0m
+[1;94m2394 | [0m  cryptoConversionId    String?
+[1;94m2395 | [0m  [1;91mcryptoConversion      CryptoConversion? @relation(fields: [cryptoConversionId], references: [id], onDelete: SetNull)[0m
+[1;94m2396 | [0m  createdAt             DateTime   @default(now())
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The relation fields `walletTransfer` on Model `CryptoConversion` and `cryptoConversion` on Model `WalletTransfer` both provide the `onDelete` or `onUpdate` argument in the @relation attribute. You have to provide it only on one of the two fields.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2333[0m
+[1;94m   | [0m
+[1;94m2332 | [0m  walletTransferId      String?
+[1;94m2333 | [0m  [1;91mwalletTransfer        WalletTransfer?   @relation(fields: [walletTransferId], references: [id], onDelete: SetNull)[0m
+[1;94m2334 | [0m  metadata              Json?
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": A one-to-one relation must use unique fields on the defining side. Either add an `@unique` attribute to the field `walletTransferId`, or change the relation to one-to-many.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2333[0m
+[1;94m   | [0m
+[1;94m2332 | [0m  walletTransferId      String?
+[1;94m2333 | [0m  [1;91mwalletTransfer        WalletTransfer?   @relation(fields: [walletTransferId], references: [id], onDelete: SetNull)[0m
+[1;94m2334 | [0m  metadata              Json?
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `merchant` in model `WalletTransfer`: The relation field `merchant` on model `WalletTransfer` is missing an opposite relation field on the model `Merchant`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2379[0m
+[1;94m   | [0m
+[1;94m2378 | [0m  merchantId            String
+[1;94m2379 | [0m  [1;91mmerchant              Merchant   @relation(fields: [merchantId], references: [id], onDelete: Cascade)[0m
+[1;94m2380 | [0m  fromWalletId          String
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `fromWallet` in model `WalletTransfer`: The relation field `fromWallet` on model `WalletTransfer` is missing an opposite relation field on the model `Wallet`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2381[0m
+[1;94m   | [0m
+[1;94m2380 | [0m  fromWalletId          String
+[1;94m2381 | [0m  [1;91mfromWallet            Wallet     @relation(fields: [fromWalletId], references: [id], onDelete: Cascade, name: "FromWallet")[0m
+[1;94m2382 | [0m  toWalletId            String
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `toWallet` in model `WalletTransfer`: The relation field `toWallet` on model `WalletTransfer` is missing an opposite relation field on the model `Wallet`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2383[0m
+[1;94m   | [0m
+[1;94m2382 | [0m  toWalletId            String
+[1;94m2383 | [0m  [1;91mtoWallet              Wallet     @relation(fields: [toWalletId], references: [id], onDelete: Cascade, name: "ToWallet")[0m
+[1;94m2384 | [0m  amount                Decimal    @db.Decimal(18, 8)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": A one-to-one relation must use unique fields on the defining side. Either add an `@unique` attribute to the field `blockchainTxId`, or change the relation to one-to-many.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2391[0m
+[1;94m   | [0m
+[1;94m2390 | [0m  blockchainTxId        String?
+[1;94m2391 | [0m  [1;91mblockchainTransaction BlockchainTransaction? @relation(fields: [blockchainTxId], references: [txHash], onDelete: SetNull)[0m
+[1;94m2392 | [0m  metadata              Json?
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The relation fields `cryptoConversion` on Model `WalletTransfer` and `walletTransfer` on Model `CryptoConversion` both provide the `references` argument in the @relation attribute. You have to provide it only on one of the two fields.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2395[0m
+[1;94m   | [0m
+[1;94m2394 | [0m  cryptoConversionId    String?
+[1;94m2395 | [0m  [1;91mcryptoConversion      CryptoConversion? @relation(fields: [cryptoConversionId], references: [id], onDelete: SetNull)[0m
+[1;94m2396 | [0m  createdAt             DateTime   @default(now())
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The relation fields `cryptoConversion` on Model `WalletTransfer` and `walletTransfer` on Model `CryptoConversion` both provide the `references` argument in the @relation attribute. You have to provide it only on one of the two fields.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2333[0m
+[1;94m   | [0m
+[1;94m2332 | [0m  walletTransferId      String?
+[1;94m2333 | [0m  [1;91mwalletTransfer        WalletTransfer?   @relation(fields: [walletTransferId], references: [id], onDelete: SetNull)[0m
+[1;94m2334 | [0m  metadata              Json?
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The relation fields `cryptoConversion` on Model `WalletTransfer` and `walletTransfer` on Model `CryptoConversion` both provide the `fields` argument in the @relation attribute. You have to provide it only on one of the two fields.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2395[0m
+[1;94m   | [0m
+[1;94m2394 | [0m  cryptoConversionId    String?
+[1;94m2395 | [0m  [1;91mcryptoConversion      CryptoConversion? @relation(fields: [cryptoConversionId], references: [id], onDelete: SetNull)[0m
+[1;94m2396 | [0m  createdAt             DateTime   @default(now())
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The relation fields `cryptoConversion` on Model `WalletTransfer` and `walletTransfer` on Model `CryptoConversion` both provide the `fields` argument in the @relation attribute. You have to provide it only on one of the two fields.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2333[0m
+[1;94m   | [0m
+[1;94m2332 | [0m  walletTransferId      String?
+[1;94m2333 | [0m  [1;91mwalletTransfer        WalletTransfer?   @relation(fields: [walletTransferId], references: [id], onDelete: SetNull)[0m
+[1;94m2334 | [0m  metadata              Json?
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The relation fields `walletTransfer` on Model `CryptoConversion` and `cryptoConversion` on Model `WalletTransfer` both provide the `onDelete` or `onUpdate` argument in the @relation attribute. You have to provide it only on one of the two fields.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2333[0m
+[1;94m   | [0m
+[1;94m2332 | [0m  walletTransferId      String?
+[1;94m2333 | [0m  [1;91mwalletTransfer        WalletTransfer?   @relation(fields: [walletTransferId], references: [id], onDelete: SetNull)[0m
+[1;94m2334 | [0m  metadata              Json?
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The relation fields `cryptoConversion` on Model `WalletTransfer` and `walletTransfer` on Model `CryptoConversion` both provide the `onDelete` or `onUpdate` argument in the @relation attribute. You have to provide it only on one of the two fields.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2395[0m
+[1;94m   | [0m
+[1;94m2394 | [0m  cryptoConversionId    String?
+[1;94m2395 | [0m  [1;91mcryptoConversion      CryptoConversion? @relation(fields: [cryptoConversionId], references: [id], onDelete: SetNull)[0m
+[1;94m2396 | [0m  createdAt             DateTime   @default(now())
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": A one-to-one relation must use unique fields on the defining side. Either add an `@unique` attribute to the field `cryptoConversionId`, or change the relation to one-to-many.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2395[0m
+[1;94m   | [0m
+[1;94m2394 | [0m  cryptoConversionId    String?
+[1;94m2395 | [0m  [1;91mcryptoConversion      CryptoConversion? @relation(fields: [cryptoConversionId], references: [id], onDelete: SetNull)[0m
+[1;94m2396 | [0m  createdAt             DateTime   @default(now())
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `walletTransfer` in model `ColdWalletTransfer`: The relation field `walletTransfer` on model `ColdWalletTransfer` is missing an opposite relation field on the model `WalletTransfer`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2410[0m
+[1;94m   | [0m
+[1;94m2409 | [0m  walletTransferId      String     @unique
+[1;94m2410 | [0m  [1;91mwalletTransfer        WalletTransfer @relation(fields: [walletTransferId], references: [id], onDelete: Cascade)[0m
+[1;94m2411 | [0m  coldWalletAddress     String
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `walletTransfer` in model `HotWalletTransfer`: The relation field `walletTransfer` on model `HotWalletTransfer` is missing an opposite relation field on the model `WalletTransfer`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2429[0m
+[1;94m   | [0m
+[1;94m2428 | [0m  walletTransferId      String     @unique
+[1;94m2429 | [0m  [1;91mwalletTransfer        WalletTransfer @relation(fields: [walletTransferId], references: [id], onDelete: Cascade)[0m
+[1;94m2430 | [0m  hotWalletAddress      String
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `merchant` in model `LiquidityPool`: The relation field `merchant` on model `LiquidityPool` is missing an opposite relation field on the model `Merchant`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2448[0m
+[1;94m   | [0m
+[1;94m2447 | [0m  merchantId            String
+[1;94m2448 | [0m  [1;91mmerchant              Merchant   @relation(fields: [merchantId], references: [id], onDelete: Cascade)[0m
+[1;94m2449 | [0m  name                  String
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `merchant` in model `ExchangeOrder`: The relation field `merchant` on model `ExchangeOrder` is missing an opposite relation field on the model `Merchant`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2485[0m
+[1;94m   | [0m
+[1;94m2484 | [0m  merchantId            String?
+[1;94m2485 | [0m  [1;91mmerchant              Merchant?  @relation(fields: [merchantId], references: [id], onDelete: SetNull)[0m
+[1;94m2486 | [0m  orderId               String?
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `exchangeProvider` in model `ExchangeQuote`: The relation field `exchangeProvider` on model `ExchangeQuote` is missing an opposite relation field on the model `ExchangeProvider`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2527[0m
+[1;94m   | [0m
+[1;94m2526 | [0m  exchangeProviderId    String
+[1;94m2527 | [0m  [1;91mexchangeProvider      ExchangeProvider @relation(fields: [exchangeProviderId], references: [id], onDelete: Cascade)[0m
+[1;94m2528 | [0m  fromCurrency          CurrencyType
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `complianceLogs` in model `Kyc`: The relation field `complianceLogs` on model `Kyc` is missing an opposite relation field on the model `ComplianceLog`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2599[0m
+[1;94m   | [0m
+[1;94m2598 | [0m  amlChecks             AMLCheck[]
+[1;94m2599 | [0m  [1;91mcomplianceLogs        ComplianceLog[][0m
+[1;94m2600 | [0m  complianceReviews     ComplianceReview[]
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `complianceReviews` in model `Kyc`: The relation field `complianceReviews` on model `Kyc` is missing an opposite relation field on the model `ComplianceReview`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2600[0m
+[1;94m   | [0m
+[1;94m2599 | [0m  complianceLogs        ComplianceLog[]
+[1;94m2600 | [0m  [1;91mcomplianceReviews     ComplianceReview[][0m
+[1;94m2601 | [0m  createdAt             DateTime       @default(now())
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `product` in model `InventoryAdjustment`: The relation field `product` on model `InventoryAdjustment` is missing an opposite relation field on the model `Product`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2903[0m
+[1;94m   | [0m
+[1;94m2902 | [0m  productId             String
+[1;94m2903 | [0m  [1;91mproduct               Product    @relation(fields: [productId], references: [id], onDelete: Cascade)[0m
+[1;94m2904 | [0m  quantity              Decimal    @db.Decimal(10, 2)
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `product` in model `PurchaseItem`: The relation field `product` on model `PurchaseItem` is missing an opposite relation field on the model `Product`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:2960[0m
+[1;94m   | [0m
+[1;94m2959 | [0m  productId             String
+[1;94m2960 | [0m  [1;91mproduct               Product    @relation(fields: [productId], references: [id], onDelete: Cascade)[0m
+[1;94m2961 | [0m  quantity              Decimal    @db.Decimal(10, 2)
+[1;94m   | [0m
+[1;91merror[0m: [1mError validating field `transaction` in model `Commission`: The relation field `transaction` on model `Commission` is missing an opposite relation field on the model `Transaction`. Either run `prisma format` or add it manually.[0m
+  [1;94m-->[0m  [4m/workspaces/smartpos-platform/database/schema/schema.prisma:3326[0m
+[1;94m   | [0m
+[1;94m3325 | [0m  transactionId         String?
+[1;94m3326 | [0m  [1;91mtransaction           Transaction? @relation(fields: [transactionId], references: [id], onDelete: SetNull)[0m
+[1;94m3327 | [0m  amount                Decimal    @db.Decimal(18, 4)
+[1;94m   | [0m
+
+Validation Error Count: 107
+[Context: validate]
+
+Prisma CLI Version : 6.19.3
