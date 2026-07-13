@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 
-import HealthService from "../services/health.service";
-import HealthController from "../controllers/health.controller";
+import HealthService from "../services/health.service.js";
+import HealthController from "../controllers/health.controller.js";
 
 export default async function healthRoutes(
 

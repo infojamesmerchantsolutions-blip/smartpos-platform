@@ -6,7 +6,7 @@ import {
 
 } from "fastify";
 
-import HealthService from "../services/health.service";
+import HealthService from "../services/health.service.js";
 
 export default class HealthController {
 

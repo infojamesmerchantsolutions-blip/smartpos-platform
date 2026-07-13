@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import Decimal from "decimal.js";
+import {Prisma } from "@prisma/client";
 
 export default class WalletService {
 
@@ -33,7 +33,7 @@ export default class WalletService {
 
   async creditWallet(
     walletId: string,
-    amount: Decimal
+    amount: Prisma.Decimal
   ) {
 
     const wallet =
@@ -46,7 +46,7 @@ export default class WalletService {
     }
 
     const balance =
-      new Decimal(wallet.balance.toString());
+      new Prisma.Decimal(wallet.balance);
 
     return this.app.prisma.wallet.update({
 
@@ -58,7 +58,7 @@ export default class WalletService {
 
       data: {
 
-        balance: balance.plus(amount).toFixed()
+        balance: balance.plus(amount)
 
       }
 
@@ -68,7 +68,7 @@ export default class WalletService {
 
   async debitWallet(
     walletId: string,
-    amount: Decimal
+    amount: Prisma.Decimal
   ) {
 
     const wallet =
@@ -81,7 +81,7 @@ export default class WalletService {
     }
 
     const balance =
-      new Decimal(wallet.balance.toString());
+      new Prisma.Decimal(wallet.balance);
 
     if (balance.lessThan(amount)) {
       throw new Error(
@@ -99,7 +99,7 @@ export default class WalletService {
 
       data: {
 
-        balance: balance.minus(amount).toFixed()
+        balance: balance.minus(amount)
 
       }
 

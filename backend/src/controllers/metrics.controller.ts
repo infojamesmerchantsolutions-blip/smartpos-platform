@@ -6,7 +6,7 @@ import {
 
 } from "fastify";
 
-import MetricsService from "../services/metrics.service";
+import MetricsService from "../services/metrics.service.js";
 
 export default class MetricsController {
 

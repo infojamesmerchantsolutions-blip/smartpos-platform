@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 
-import ExchangeService from "../services/exchange.service";
-import ExchangeController from "../controllers/exchange.controller";
+import ExchangeService from "../services/exchange.service.js";
+import ExchangeController from "../controllers/exchange.controller.js";
 
 export default async function exchangeRoutes(
   app: FastifyInstance

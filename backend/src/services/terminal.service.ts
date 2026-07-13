@@ -20,8 +20,8 @@ export default class TerminalService {
             },
 
             {
-              terminalIdentifier:
-                data.terminalIdentifier
+              terminalId:
+                data.terminalId
             }
 
           ]
@@ -64,9 +64,9 @@ export default class TerminalService {
 
       data: {
 
-        status: "ACTIVE",
+        status: "ONLINE",
 
-        lastHeartbeat: new Date()
+        lastHeartbeatAt: new Date()
 
       }
 
@@ -88,7 +88,7 @@ export default class TerminalService {
 
       data: {
 
-        lastHeartbeat: new Date()
+        lastHeartbeatAt: new Date()
 
       }
 
@@ -114,7 +114,7 @@ export default class TerminalService {
 
         transactions: true,
 
-        devices: true
+        device: true
 
       }
 
@@ -136,7 +136,7 @@ export default class TerminalService {
 
       data: {
 
-        status: "INACTIVE"
+        status: "OFFLINE"
 
       }
 

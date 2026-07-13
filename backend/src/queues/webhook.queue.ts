@@ -4,9 +4,9 @@ import {
 
   BullConnection
 
-} from "./bullmq.queue";
+} from "./bullmq.queue.js";
 
-import WebhookService from "../services/webhook.service";
+import WebhookService from "../services/webhook.service.js";
 
 export default function createWebhookWorker(
 

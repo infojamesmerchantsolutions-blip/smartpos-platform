@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
-import SettlementService from "../services/settlement.service";
+import SettlementService from "../services/settlement.service.js";
 
 export default class SettlementController {
 

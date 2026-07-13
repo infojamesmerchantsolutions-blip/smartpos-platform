@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 
-import BlockchainService from "../services/blockchain.service";
-import BlockchainController from "../controllers/blockchain.controller";
+import BlockchainService from "../services/blockchain.service.js";
+import BlockchainController from "../controllers/blockchain.controller.js";
 
 export default async function blockchainRoutes(
   app: FastifyInstance

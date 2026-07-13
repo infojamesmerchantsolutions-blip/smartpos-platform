@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 
-import WebhookService from "../services/webhook.service";
-import WebhookController from "../controllers/webhook.controller";
+import WebhookService from "../services/webhook.service.js";
+import WebhookController from "../controllers/webhook.controller.js";
 
 export default async function webhookRoutes(
   app: FastifyInstance

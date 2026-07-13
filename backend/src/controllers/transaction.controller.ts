@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
-import BlockchainService from "../services/blockchain.service";
+import BlockchainService from "../services/blockchain.service.js";
 
 export default class BlockchainController {
 

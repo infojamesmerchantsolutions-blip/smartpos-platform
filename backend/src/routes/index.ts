@@ -1,11 +1,11 @@
 import { FastifyInstance } from "fastify";
 
-import paymentRoutes from "./payment.routes";
-import transactionRoutes from "./transaction.routes";
-import blockchainRoutes from "./blockchain.routes";
-import exchangeRoutes from "./exchange.routes";
-import gatewayRoutes from "./gateway.routes";
-import settlementRoutes from "./settlement.routes";
+import paymentRoutes from "./payment.routes.js";
+import transactionRoutes from "./transaction.routes.js";
+import blockchainRoutes from "./blockchain.routes.js";
+import exchangeRoutes from "./exchange.routes.js";
+import gatewayRoutes from "./gateway.routes.js";
+import settlementRoutes from "./settlement.routes.js";
 
 export default async function registerRoutes(
   app: FastifyInstance

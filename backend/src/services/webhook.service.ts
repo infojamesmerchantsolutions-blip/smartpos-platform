@@ -1,4 +1,5 @@
 import { FastifyInstance } from "fastify";
+import { WebhookStatus } from "@prisma/client";
 
 export default class WebhookService {
 
@@ -6,50 +7,44 @@ export default class WebhookService {
     private readonly app: FastifyInstance
   ) {}
 
+  /*
+  |--------------------------------------------------------------------------
+  | Receive Webhook
+  |--------------------------------------------------------------------------
+  */
+
   async receiveWebhook(data: {
-
-    provider: string;
-
+    webhookId: string;
     event: string;
-
     payload: any;
-
-    signature?: string;
-
-    headers?: any;
-
+    transactionId?: string;
   }) {
 
-    const webhook =
-      await this.app.prisma.webhookDelivery.create({
+    return this.app.prisma.webhookDelivery.create({
 
-        data: {
+      data: {
 
-          provider:
-            data.provider,
+        webhookId: data.webhookId,
 
-          event:
-            data.event,
+        event: data.event,
 
-          payload:
-            data.payload,
+        payload: data.payload,
 
-          signature:
-            data.signature,
+        transactionId: data.transactionId,
 
-          headers:
-            data.headers,
+        status: WebhookStatus.PENDING
 
-          status:
-            "RECEIVED"
+      }
 
-        }
-
-      });
-
-    return webhook;
+    });
 
   }
+
+  /*
+  |--------------------------------------------------------------------------
+  | Process Webhook
+  |--------------------------------------------------------------------------
+  */
 
   async processWebhook(
     webhookId: string
@@ -59,9 +54,7 @@ export default class WebhookService {
       await this.app.prisma.webhookDelivery.findUnique({
 
         where: {
-
           id: webhookId
-
         }
 
       });
@@ -77,15 +70,16 @@ export default class WebhookService {
     await this.app.prisma.webhookDelivery.update({
 
       where: {
-
         id: webhookId
-
       },
 
       data: {
 
-        status:
-          "PROCESSING"
+        attempts: {
+          increment: 1
+        },
+
+        status: WebhookStatus.RETRYING
 
       }
 
@@ -95,31 +89,45 @@ export default class WebhookService {
 
   }
 
+  /*
+  |--------------------------------------------------------------------------
+  | Complete Webhook
+  |--------------------------------------------------------------------------
+  */
+
   async completeWebhook(
-    webhookId: string
+    webhookId: string,
+    responseStatus?: number,
+    responseBody?: string
   ) {
 
     return this.app.prisma.webhookDelivery.update({
 
       where: {
-
         id: webhookId
-
       },
 
       data: {
 
-        status:
-          "COMPLETED",
+        status: WebhookStatus.DELIVERED,
 
-        processedAt:
-          new Date()
+        deliveredAt: new Date(),
+
+        responseStatus,
+
+        responseBody
 
       }
 
     });
 
   }
+
+  /*
+  |--------------------------------------------------------------------------
+  | Fail Webhook
+  |--------------------------------------------------------------------------
+  */
 
   async failWebhook(
     webhookId: string,
@@ -129,18 +137,14 @@ export default class WebhookService {
     return this.app.prisma.webhookDelivery.update({
 
       where: {
-
         id: webhookId
-
       },
 
       data: {
 
-        status:
-          "FAILED",
+        status: WebhookStatus.FAILED,
 
-        error:
-          reason
+        error: reason
 
       }
 

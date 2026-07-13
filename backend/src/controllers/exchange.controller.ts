@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import PaymentService from "../services/payment.service";
+import PaymentService from "../services/payment.service.js";
 
 export default class PaymentController {
 

@@ -81,7 +81,7 @@ export default class SettlementService {
 
         netAmount,
 
-        metadata: data.metadata,
+        metadata: data.metadata ?? Prisma.JsonNull,
 
         reference:
           this.generateReference(),
@@ -238,7 +238,7 @@ export default class SettlementService {
           data.transactionCount,
 
         metadata:
-          data.metadata
+          data.metadata ?? Prisma.JsonNull
 
       }
 
@@ -306,9 +306,7 @@ export default class SettlementService {
 
         attempts: true,
 
-        fees: true,
-
-        settlementSchedules: true
+        fees: true
 
       }
 

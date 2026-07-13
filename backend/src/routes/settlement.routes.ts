@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 
-import SettlementService from "../services/settlement.service";
-import SettlementController from "../controllers/settlement.controller";
+import SettlementService from "../services/settlement.service.js";
+import SettlementController from "../controllers/settlement.controller.js";
 
 export default async function settlementRoutes(
   app: FastifyInstance

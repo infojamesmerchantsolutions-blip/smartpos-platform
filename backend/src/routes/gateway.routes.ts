@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 
-import GatewayService from "../services/gateway.service";
-import GatewayController from "../controllers/gateway.controller";
+import GatewayService from "../services/gateway.service.js";
+import GatewayController from "../controllers/gateway.controller.js";
 
 export default async function gatewayRoutes(
   app: FastifyInstance

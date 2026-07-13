@@ -2,7 +2,7 @@ import fp from "fastify-plugin";
 
 import Redis from "ioredis";
 
-import env from "../config/env";
+import env from "../config/env.js";
 
 export default fp(async (app) => {
 

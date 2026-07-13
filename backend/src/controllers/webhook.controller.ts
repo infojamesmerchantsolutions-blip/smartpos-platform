@@ -3,7 +3,7 @@ import {
   FastifyRequest
 } from "fastify";
 
-import WebhookService from "../services/webhook.service";
+import WebhookService from "../services/webhook.service.js";
 
 export default class WebhookController {
 

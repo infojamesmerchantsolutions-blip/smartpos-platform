@@ -1,5 +1,5 @@
-import BaseProvider from "./base.provider";
-import ProviderFactory from "./provider.factory";
+import BaseProvider from "./base.provider.js";
+import ProviderFactory from "./provider.factory.js";
 
 export default class ProviderManager {
 

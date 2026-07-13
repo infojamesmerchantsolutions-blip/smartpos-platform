@@ -2,7 +2,7 @@ import nodemailer, {
   Transporter
 } from "nodemailer";
 
-import env from "../config/env";
+import env from "../config/env.js";
 
 export interface SendEmailOptions {
 

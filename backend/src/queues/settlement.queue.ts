@@ -4,9 +4,9 @@ import {
 
   BullConnection
 
-} from "./bullmq.queue";
+} from "./bullmq.queue.js";
 
-import SettlementService from "../services/settlement.service";
+import SettlementService from "../services/settlement.service.js";
 
 export default function createSettlementWorker(
 

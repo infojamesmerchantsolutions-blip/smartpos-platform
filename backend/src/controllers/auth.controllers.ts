@@ -3,7 +3,7 @@ import {
   FastifyRequest
 } from "fastify";
 
-import AuthService from "../services/auth.service";
+import AuthService from "../services/auth.service.js";
 
 export default class AuthController {
 

@@ -1,5 +1,5 @@
-import BaseProvider from "./base.provider";
-import ProviderManager from "./provider.manager";
+import BaseProvider from "./base.provider.js";
+import ProviderManager from "./provider.manager.js";
 
 export default class ProviderFailover {
 

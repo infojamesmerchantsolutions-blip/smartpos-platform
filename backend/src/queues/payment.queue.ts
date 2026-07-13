@@ -4,9 +4,9 @@ import {
 
   BullConnection
 
-} from "./bullmq.queue";
+} from "./bullmq.queue.js";
 
-import PaymentService from "../services/payment.service";
+import PaymentService from "../services/payment.service.js";
 
 export default function createPaymentWorker(
 

@@ -2,46 +2,46 @@ export {
 
   default as BaseProvider
 
-} from "./base.provider";
+} from "./base.provider.js";
 
 export {
 
   default as ProviderFactory
 
-} from "./provider.factory";
+} from "./provider.factory.js";
 
 export {
 
   default as ProviderManager
 
-} from "./provider.manager";
+} from "./provider.manager.js";
 
 export {
 
   default as StripeProvider
 
-} from "./stripe.provider";
+} from "./stripe.provider.js";
 
 export {
 
   default as PaystackProvider
 
-} from "./paystack.provider";
+} from "./paystack.provider.js";
 
 export {
 
   default as FlutterwaveProvider
 
-} from "./flutterwave.provider";
+} from "./flutterwave.provider.js";
 
 export {
 
   default as CoinbaseProvider
 
-} from "./coinbase.provider";
+} from "./coinbase.provider.js";
 
 export {
 
   default as BinanceProvider
 
-} from "./binance.provider";
+} from "./binance.provider.js";

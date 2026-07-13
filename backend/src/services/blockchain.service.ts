@@ -64,7 +64,7 @@ export default class BlockchainService {
 
         txHash: this.generateTxHash(),
 
-        blockchain: data.blockchain,
+        blockchainId: data.blockchain,
 
         walletId: data.walletId,
 
@@ -83,9 +83,9 @@ export default class BlockchainService {
 
         nonce: data.nonce,
 
-        metadata: data.metadata,
+        metadata: data.metadata ?? Prisma.JsonNull,
 
-        data: data.payload,
+        data: data.payload ?? Prisma.JsonNull,
 
         status: "pending"
 
@@ -203,7 +203,7 @@ export default class BlockchainService {
 
         blockTime: data.blockTime,
 
-        metadata: data.metadata
+        metadata: data.metadata ?? Prisma.JsonNull,
 
       }
 
@@ -276,8 +276,7 @@ export default class BlockchainService {
         cryptoConversionId:
           data.cryptoConversionId,
 
-        metadata:
-          data.metadata
+        metadata: data.metadata ?? Prisma.JsonNull,
 
       }
 

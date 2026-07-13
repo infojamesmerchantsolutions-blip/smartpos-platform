@@ -7,10 +7,10 @@ import sensible from '@fastify/sensible';
 import swagger from '@fastify/swagger';
 import swaggerUI from '@fastify/swagger-ui';
 
-import { swaggerOptions } from '../config/swagger';
+import { swaggerOptions } from '../config/swagger.js';
 
-import { registerJwt } from './jwt';
-import { registerPrisma } from './prisma';
+import { registerJwt } from './jwt.js';
+import { registerPrisma } from './prisma.js';
 
 export async function registerPlugins(app: FastifyInstance) {
   await app.register(helmet);

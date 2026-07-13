@@ -4,7 +4,7 @@ import {
 
   BullConnection
 
-} from "./bullmq.queue";
+} from "./bullmq.queue.js";
 
 export default function createNotificationWorker() {
 

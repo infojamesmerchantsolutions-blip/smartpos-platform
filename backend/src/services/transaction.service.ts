@@ -7,11 +7,12 @@ import {
 
 import { FastifyInstance } from "fastify";
 
-import PaymentService from "./payment.service";
-import ExchangeService from "./exchange.service";
-import GatewayService from "./gateway.service";
-import SettlementService from "./settlement.service";
-import BlockchainService from "./blockchain.service";
+import PaymentService from "./payment.service.js";
+import ExchangeService from "./exchange.service.js";
+import GatewayService from "./gateway.service.js";
+import SettlementService from "./settlement.service.js";
+import BlockchainService from "./blockchain.service.js";
+import { removeUndefinedFields } from "bullmq";
 
 export default class TransactionService {
 
@@ -241,7 +242,7 @@ export default class TransactionService {
               metadata:
                 data.metadata
 
-            });
+            }) ;
 
         /*
         ----------------------------------------
@@ -315,7 +316,7 @@ export default class TransactionService {
 
         paymentIntent: true,
 
-        paymentAttempt: true,
+        paymentAttempts: true,
 
         authorization: true,
 
@@ -330,6 +331,8 @@ export default class TransactionService {
         gatewayResponse: true,
 
         blockchainTransaction: true,
+
+        cryptoConversion: true,
 
         refunds: true,
 
@@ -718,20 +721,23 @@ export default class TransactionService {
 
       });
 
-    if (transaction.paymentAttempt) {
+    const paymentAttempt =
+  transaction.paymentAttempts?.[0];
 
-      await this.paymentService
-        .completePaymentAttempt(
+if (paymentAttempt) {
 
-          transaction.paymentAttempt.id,
+  await this.paymentService
+    .completePaymentAttempt(
 
-          {
-            completed: true
-          }
+      paymentAttempt.id,
 
-        );
+      {
+        completed: true
+      }
 
-    }
+    );
+
+}
 
     if (transaction.cryptoConversion) {
 
@@ -755,7 +761,7 @@ export default class TransactionService {
       data: {
 
         status:
-          TransactionStatus.COMPLETED,
+          TransactionStatus.SETTLED,
 
         settlementStatus:
           SettlementStatus.COMPLETED
@@ -799,20 +805,23 @@ export default class TransactionService {
 
     }
 
-    if (transaction.paymentAttempt) {
+    const paymentAttempt =
+  transaction.paymentAttempts?.[0];
 
-      await this.paymentService
-        .failPaymentAttempt(
+if (paymentAttempt) {
 
-          transaction.paymentAttempt.id,
+  await this.paymentService
+    .failPaymentAttempt(
 
-          data.reason,
+      paymentAttempt.id,
 
-          data.gatewayResponse
+      data.reason,
 
-        );
+      data.gatewayResponse
 
-    }
+    );
+
+}
 
     if (transaction.cryptoConversion) {
 
@@ -991,14 +1000,14 @@ export default class TransactionService {
         transactionId:
           data.transactionId,
 
-        title:
-          data.title,
+        step: data.title,
 
-        description:
-          data.description,
+        status: "INFO",
+
+        message: data.description,
 
         metadata:
-          data.metadata
+          data.metadata ?? Prisma.JsonNull
 
       }
 
@@ -1029,11 +1038,11 @@ export default class TransactionService {
         transactionId:
           data.transactionId,
 
-        event:
-          data.event,
+        eventType: data.event,
 
-        metadata:
-          data.metadata
+        status: "INFO",
+
+        description: undefined
 
       }
 
@@ -1051,9 +1060,9 @@ export default class TransactionService {
 
     transactionId: string;
 
-    previousStatus: string;
+    previousStatus: TransactionStatus;
 
-    newStatus: string;
+    newStatus: TransactionStatus;
 
     metadata?: Prisma.JsonValue;
 
@@ -1066,14 +1075,19 @@ export default class TransactionService {
         transactionId:
           data.transactionId,
 
-        previousStatus:
-          data.previousStatus,
+        oldStatus: data.previousStatus as TransactionStatus,
 
         newStatus:
-          data.newStatus,
+          data.newStatus as TransactionStatus,
+        
+        changedBy:
+          undefined,
+        
+        reason:
+          undefined,
 
         metadata:
-          data.metadata
+          data.metadata ?? Prisma.JsonNull
 
       }
 
@@ -1106,8 +1120,6 @@ export default class TransactionService {
         terminal: true,
 
         authorization: true,
-
-        settlement: true,
 
         blockchainTransaction: true
 

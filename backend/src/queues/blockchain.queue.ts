@@ -4,9 +4,9 @@ import {
 
   BullConnection
 
-} from "./bullmq.queue";
+} from "./bullmq.queue.js";
 
-import BlockchainService from "../services/blockchain.service";
+import BlockchainService from "../services/blockchain.service.js";
 
 export default function createBlockchainWorker(
 

@@ -71,7 +71,7 @@ export default class ExchangeService {
 
         expiresAt: data.expiresAt,
 
-        metadata: data.metadata
+        metadata: data.metadata ?? Prisma.JsonNull
 
       }
 
@@ -197,8 +197,7 @@ export default class ExchangeService {
         exchangeProvider:
           data.exchangeProvider,
 
-        metadata:
-          data.metadata,
+        metadata: data.metadata ?? Prisma.JsonNull,
 
         status: "pending"
 

@@ -77,9 +77,9 @@ export default class GatewayService {
 
         method: data.method,
 
-        requestBody: data.requestBody,
+        requestBody: data.requestBody ?? Prisma.JsonNull,
 
-        requestHeaders: data.requestHeaders
+        requestHeaders: data.requestHeaders ?? Prisma.JsonNull,
 
       }
 
@@ -117,9 +117,9 @@ export default class GatewayService {
 
         statusCode: data.statusCode,
 
-        responseBody: data.responseBody,
+        responseBody: data.responseBody ?? Prisma.JsonNull,
 
-        responseHeaders: data.responseHeaders,
+        responseHeaders: data.responseHeaders ?? Prisma.JsonNull,
 
         error: data.error,
 

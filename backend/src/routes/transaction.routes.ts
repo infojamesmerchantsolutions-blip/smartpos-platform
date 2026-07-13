@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 
-import TransactionService from "../services/transaction.service";
-import TransactionController from "../controllers/transaction.controller";
+import TransactionService from "../services/transaction.service.js";
+import TransactionController from "../controllers/transaction.controller.js";
 
 export default async function transactionRoutes(
   app: FastifyInstance

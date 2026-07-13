@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 
-import MetricsService from "../services/metrics.service";
-import MetricsController from "../controllers/metrics.controller";
+import MetricsService from "../services/metrics.service.js";
+import MetricsController from "../controllers/metrics.controller.js";
 
 export default async function metricsRoutes(
 

@@ -1,13 +1,13 @@
-import PaymentService from "../services/payment.service";
-import SettlementService from "../services/settlement.service";
-import BlockchainService from "../services/blockchain.service";
-import WebhookService from "../services/webhook.service";
+import PaymentService from "../services/payment.service.js";
+import SettlementService from "../services/settlement.service.js";
+import BlockchainService from "../services/blockchain.service.js";
+import WebhookService from "../services/webhook.service.js";
 
-import createPaymentWorker from "./payment.queue";
-import createSettlementWorker from "./settlement.queue";
-import createBlockchainWorker from "./blockchain.queue";
-import createWebhookWorker from "./webhook.queue";
-import createNotificationWorker from "./notification.queue";
+import createPaymentWorker from "./payment.queue.js";
+import createSettlementWorker from "./settlement.queue.js";
+import createBlockchainWorker from "./blockchain.queue.js";
+import createWebhookWorker from "./webhook.queue.js";
+import createNotificationWorker from "./notification.queue.js";
 
 export default class QueueManager {
 

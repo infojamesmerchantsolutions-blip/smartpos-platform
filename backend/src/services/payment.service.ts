@@ -80,7 +80,7 @@ export default class PaymentService {
 
         description: data.description,
 
-        metadata: data.metadata,
+        metadata: data.metadata ?? Prisma.JsonNull,
 
         clientSecret: this.generateClientSecret(),
 
@@ -207,7 +207,7 @@ export default class PaymentService {
 
         description: data.description,
 
-        metadata: data.metadata,
+        metadata: data.metadata ?? Prisma.JsonNull,
 
         settlementStatus:
           SettlementStatus.PENDING,
@@ -217,17 +217,8 @@ export default class PaymentService {
         status:
           TransactionStatus.INITIATED,
 
-        paymentIntent: data.paymentIntentId
-          ? {
-
-              connect: {
-
-                id: data.paymentIntentId
-
-              }
-
-            }
-          : undefined
+        paymentIntentId:
+          data.paymentIntentId,
 
       }
 
@@ -317,9 +308,9 @@ export default class PaymentService {
 
       data: {
 
-        status: PaymentStatus.COMPLETED,
+        status: PaymentStatus.SETTLED,
 
-        gatewayResponse
+        gatewayResponse: gatewayResponse ?? Prisma.JsonNull
 
       }
 
@@ -351,7 +342,7 @@ export default class PaymentService {
 
         errorMessage,
 
-        gatewayResponse
+        gatewayResponse: gatewayResponse ?? Prisma.JsonNull
 
       }
 
@@ -398,7 +389,7 @@ export default class PaymentService {
 
           message: data.message,
 
-          gatewayResponse: data.gatewayResponse
+          gatewayResponse: data.gatewayResponse ?? Prisma.JsonNull
 
         }
 
@@ -448,7 +439,7 @@ export default class PaymentService {
 
         message,
 
-        gatewayResponse
+        gatewayResponse: gatewayResponse ?? Prisma.JsonNull
 
       }
 
@@ -487,7 +478,7 @@ export default class PaymentService {
 
           status: "completed",
 
-          gatewayResponse: data.gatewayResponse
+          gatewayResponse: data.gatewayResponse ?? Prisma.JsonNull
 
         }
 
@@ -503,7 +494,7 @@ export default class PaymentService {
 
       data: {
 
-        status: TransactionStatus.COMPLETED
+        status: TransactionStatus.SETTLED
 
       }
 
@@ -548,7 +539,7 @@ export default class PaymentService {
 
           status: "completed",
 
-          gatewayResponse: data.gatewayResponse
+          gatewayResponse: data.gatewayResponse ?? Prisma.JsonNull
 
         }
 
@@ -601,7 +592,7 @@ export default class PaymentService {
 
           status: "completed",
 
-          gatewayResponse: data.gatewayResponse
+          gatewayResponse: data.gatewayResponse ?? Prisma.JsonNull
 
         }
 
@@ -665,7 +656,7 @@ export default class PaymentService {
 
         paymentIntent: true,
 
-        paymentAttempt: true,
+        paymentAttempts: true,
 
         gatewayRequest: true,
 

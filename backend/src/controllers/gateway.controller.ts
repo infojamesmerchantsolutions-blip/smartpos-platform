@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
-import GatewayService from "../services/gateway.service";
+import GatewayService from "../services/gateway.service.js";
 
 export default class GatewayController {
 

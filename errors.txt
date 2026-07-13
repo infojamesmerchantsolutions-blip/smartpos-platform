@@ -1,0 +1,237 @@
+
+> smartpos-backend@1.0.0 build
+> tsc
+
+src/app.ts(3,26): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/app.ts(4,23): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/app.ts(5,27): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/app.ts(6,32): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/app.ts(7,36): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/app.ts(9,28): error TS2834: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.
+src/config/startup-check.ts(1,17): error TS2835: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Did you mean './env.js'?
+src/controllers/auth.controllers.ts(6,25): error TS2307: Cannot find module '../services/auth.service' or its corresponding type declarations.
+src/controllers/blockchain.controller.ts(3,31): error TS2307: Cannot find module '../services/blockchain.service' or its corresponding type declarations.
+src/controllers/exchange.controller.ts(2,28): error TS2307: Cannot find module '../services/payment.service' or its corresponding type declarations.
+src/controllers/gateway.controller.ts(3,28): error TS2307: Cannot find module '../services/gateway.service' or its corresponding type declarations.
+src/controllers/health.controller.ts(9,27): error TS2307: Cannot find module '../services/health.service' or its corresponding type declarations.
+src/controllers/metrics.controller.ts(9,28): error TS2307: Cannot find module '../services/metrics.service' or its corresponding type declarations.
+src/controllers/payment.controller.ts(2,28): error TS2307: Cannot find module '../services/payment.service' or its corresponding type declarations.
+src/controllers/settlement.controller.ts(3,31): error TS2307: Cannot find module '../services/settlement.service' or its corresponding type declarations.
+src/controllers/transaction.controller.ts(3,31): error TS2307: Cannot find module '../services/blockchain.service' or its corresponding type declarations.
+src/controllers/webhook.controller.ts(6,28): error TS2307: Cannot find module '../services/webhook.service' or its corresponding type declarations.
+src/index.ts(1,26): error TS2835: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Did you mean './app.js'?
+src/index.ts(2,21): error TS2835: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Did you mean './config/env.js'?
+src/middleware/rate-limit.middleware.ts(31,22): error TS2339: Property 'redis' does not exist on type 'FastifyInstance<RawServerDefault, IncomingMessage, ServerResponse<IncomingMessage>, FastifyBaseLogger, FastifyTypeProviderDefault>'.
+src/pluggins/index.ts(10,32): error TS2835: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Did you mean '../config/swagger.js'?
+src/pluggins/index.ts(12,29): error TS2835: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Did you mean './jwt.js'?
+src/pluggins/index.ts(13,32): error TS2835: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Did you mean './prisma.js'?
+src/pluggins/jwt.ts(9,5): error TS2717: Subsequent property declarations must have the same type.  Property 'payload' must be of type '{ id: string; merchantId?: string | undefined; email: string; role: string; }', but here has type '{ id: string; email: string; role: string; }'.
+src/pluggins/jwt.ts(19,5): error TS2717: Subsequent property declarations must have the same type.  Property 'user' must be of type '{ id: string; merchantId?: string | undefined; email: string; role: string; }', but here has type '{ id: string; email: string; role: string; }'.
+src/pluggins/redis.plugin.ts(5,17): error TS2835: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Did you mean '../config/env.js'?
+src/pluggins/redis.plugin.ts(9,21): error TS2351: This expression is not constructable.
+  Type 'typeof import("/workspaces/smartpos-platform/node_modules/ioredis/built/index")' has no construct signatures.
+src/providers/binance.provider.ts(3,8): error TS2307: Cannot find module 'axios' or its corresponding type declarations.
+src/providers/binance.provider.ts(10,8): error TS2307: Cannot find module './base.provider' or its corresponding type declarations.
+src/providers/coinbase.provider.ts(1,38): error TS2307: Cannot find module 'axios' or its corresponding type declarations.
+src/providers/coinbase.provider.ts(7,8): error TS2307: Cannot find module './base.provider' or its corresponding type declarations.
+src/providers/flutterwave.provider.ts(1,38): error TS2307: Cannot find module 'axios' or its corresponding type declarations.
+src/providers/flutterwave.provider.ts(7,8): error TS2307: Cannot find module './base.provider' or its corresponding type declarations.
+src/providers/gateway-router.ts(1,26): error TS2307: Cannot find module './base.provider' or its corresponding type declarations.
+src/providers/gateway-router.ts(2,29): error TS2307: Cannot find module './provider.manager' or its corresponding type declarations.
+src/providers/index.ts(5,8): error TS2307: Cannot find module './base.provider' or its corresponding type declarations.
+src/providers/index.ts(11,8): error TS2307: Cannot find module './provider.factory' or its corresponding type declarations.
+src/providers/index.ts(17,8): error TS2307: Cannot find module './provider.manager' or its corresponding type declarations.
+src/providers/index.ts(23,8): error TS2307: Cannot find module './stripe.provider' or its corresponding type declarations.
+src/providers/index.ts(29,8): error TS2307: Cannot find module './paystack.provider' or its corresponding type declarations.
+src/providers/index.ts(35,8): error TS2307: Cannot find module './flutterwave.provider' or its corresponding type declarations.
+src/providers/index.ts(41,8): error TS2307: Cannot find module './coinbase.provider' or its corresponding type declarations.
+src/providers/index.ts(47,8): error TS2307: Cannot find module './binance.provider' or its corresponding type declarations.
+src/providers/paystack.provider.ts(1,38): error TS2307: Cannot find module 'axios' or its corresponding type declarations.
+src/providers/paystack.provider.ts(7,8): error TS2307: Cannot find module './base.provider' or its corresponding type declarations.
+src/providers/provider-failover.ts(1,26): error TS2307: Cannot find module './base.provider' or its corresponding type declarations.
+src/providers/provider-failover.ts(2,29): error TS2307: Cannot find module './provider.manager' or its corresponding type declarations.
+src/providers/provider-health.service.ts(1,29): error TS2307: Cannot find module './provider.manager' or its corresponding type declarations.
+src/providers/provider.factory.ts(1,28): error TS2307: Cannot find module './stripe.provider' or its corresponding type declarations.
+src/providers/provider.factory.ts(2,30): error TS2307: Cannot find module './paystack.provider' or its corresponding type declarations.
+src/providers/provider.factory.ts(3,33): error TS2307: Cannot find module './flutterwave.provider' or its corresponding type declarations.
+src/providers/provider.factory.ts(4,30): error TS2307: Cannot find module './coinbase.provider' or its corresponding type declarations.
+src/providers/provider.factory.ts(5,29): error TS2307: Cannot find module './binance.provider' or its corresponding type declarations.
+src/providers/provider.factory.ts(7,26): error TS2307: Cannot find module './base.provider' or its corresponding type declarations.
+src/providers/provider.factory.ts(9,17): error TS2835: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Did you mean '../config/env.js'?
+src/providers/provider.manager.ts(1,26): error TS2307: Cannot find module './base.provider' or its corresponding type declarations.
+src/providers/provider.manager.ts(2,29): error TS2307: Cannot find module './provider.factory' or its corresponding type declarations.
+src/providers/smart-gateway-selector.ts(61,20): error TS2339: Property 'supportedCurrencies' does not exist on type '{ id: string; name: string; displayName: string; isActive: boolean; createdAt: Date; updatedAt: Date; priority: number; configSchema: JsonValue; baseUrl: string | null; }'.
+src/providers/stripe.provider.ts(1,20): error TS2307: Cannot find module 'stripe' or its corresponding type declarations.
+src/providers/stripe.provider.ts(13,8): error TS2307: Cannot find module './base.provider' or its corresponding type declarations.
+src/queues/blockchain.queue.ts(1,29): error TS2307: Cannot find module 'bullmq' or its corresponding type declarations.
+src/queues/blockchain.queue.ts(7,8): error TS2307: Cannot find module './bullmq.queue' or its corresponding type declarations.
+src/queues/blockchain.queue.ts(9,31): error TS2307: Cannot find module '../services/blockchain.service' or its corresponding type declarations.
+src/queues/bullmq.queue.ts(1,23): error TS2307: Cannot find module 'bullmq' or its corresponding type declarations.
+src/queues/bullmq.queue.ts(4,17): error TS2835: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Did you mean '../config/env.js'?
+src/queues/bullmq.queue.ts(6,24): error TS2351: This expression is not constructable.
+  Type 'typeof import("/workspaces/smartpos-platform/node_modules/ioredis/built/index")' has no construct signatures.
+src/queues/notification.queue.ts(1,29): error TS2307: Cannot find module 'bullmq' or its corresponding type declarations.
+src/queues/notification.queue.ts(7,8): error TS2307: Cannot find module './bullmq.queue' or its corresponding type declarations.
+src/queues/payment.queue.ts(1,29): error TS2307: Cannot find module 'bullmq' or its corresponding type declarations.
+src/queues/payment.queue.ts(7,8): error TS2307: Cannot find module './bullmq.queue' or its corresponding type declarations.
+src/queues/payment.queue.ts(9,28): error TS2307: Cannot find module '../services/payment.service' or its corresponding type declarations.
+src/queues/queue.manager.ts(1,28): error TS2307: Cannot find module '../services/payment.service' or its corresponding type declarations.
+src/queues/queue.manager.ts(2,31): error TS2307: Cannot find module '../services/settlement.service' or its corresponding type declarations.
+src/queues/queue.manager.ts(3,31): error TS2307: Cannot find module '../services/blockchain.service' or its corresponding type declarations.
+src/queues/queue.manager.ts(4,28): error TS2307: Cannot find module '../services/webhook.service' or its corresponding type declarations.
+src/queues/queue.manager.ts(6,33): error TS2307: Cannot find module './payment.queue' or its corresponding type declarations.
+src/queues/queue.manager.ts(7,36): error TS2307: Cannot find module './settlement.queue' or its corresponding type declarations.
+src/queues/queue.manager.ts(8,36): error TS2307: Cannot find module './blockchain.queue' or its corresponding type declarations.
+src/queues/queue.manager.ts(9,33): error TS2307: Cannot find module './webhook.queue' or its corresponding type declarations.
+src/queues/queue.manager.ts(10,38): error TS2307: Cannot find module './notification.queue' or its corresponding type declarations.
+src/queues/settlement.queue.ts(1,29): error TS2307: Cannot find module 'bullmq' or its corresponding type declarations.
+src/queues/settlement.queue.ts(7,8): error TS2307: Cannot find module './bullmq.queue' or its corresponding type declarations.
+src/queues/settlement.queue.ts(9,31): error TS2307: Cannot find module '../services/settlement.service' or its corresponding type declarations.
+src/queues/webhook.queue.ts(1,29): error TS2307: Cannot find module 'bullmq' or its corresponding type declarations.
+src/queues/webhook.queue.ts(7,8): error TS2307: Cannot find module './bullmq.queue' or its corresponding type declarations.
+src/queues/webhook.queue.ts(9,28): error TS2307: Cannot find module '../services/webhook.service' or its corresponding type declarations.
+src/routes/auth.routes.ts(3,25): error TS2307: Cannot find module '../services/auth.service' or its corresponding type declarations.
+src/routes/auth.routes.ts(4,28): error TS2307: Cannot find module '../controllers/auth.controller' or its corresponding type declarations.
+src/routes/auth.routes.ts(8,8): error TS2307: Cannot find module '../middlewares/auth.middleware' or its corresponding type declarations.
+src/routes/blockchain.routes.ts(3,31): error TS2307: Cannot find module '../services/blockchain.service' or its corresponding type declarations.
+src/routes/blockchain.routes.ts(4,34): error TS2307: Cannot find module '../controllers/blockchain.controller' or its corresponding type declarations.
+src/routes/exchange.routes.ts(3,29): error TS2307: Cannot find module '../services/exchange.service' or its corresponding type declarations.
+src/routes/exchange.routes.ts(4,32): error TS2307: Cannot find module '../controllers/exchange.controller' or its corresponding type declarations.
+src/routes/gateway.routes.ts(3,28): error TS2307: Cannot find module '../services/gateway.service' or its corresponding type declarations.
+src/routes/gateway.routes.ts(4,31): error TS2307: Cannot find module '../controllers/gateway.controller' or its corresponding type declarations.
+src/routes/health.routes.ts(3,27): error TS2307: Cannot find module '../services/health.service' or its corresponding type declarations.
+src/routes/health.routes.ts(4,30): error TS2307: Cannot find module '../controllers/health.controller' or its corresponding type declarations.
+src/routes/index.ts(3,27): error TS2307: Cannot find module './payment.routes' or its corresponding type declarations.
+src/routes/index.ts(4,31): error TS2307: Cannot find module './transaction.routes' or its corresponding type declarations.
+src/routes/index.ts(5,30): error TS2307: Cannot find module './blockchain.routes' or its corresponding type declarations.
+src/routes/index.ts(6,28): error TS2307: Cannot find module './exchange.routes' or its corresponding type declarations.
+src/routes/index.ts(7,27): error TS2307: Cannot find module './gateway.routes' or its corresponding type declarations.
+src/routes/index.ts(8,30): error TS2307: Cannot find module './settlement.routes' or its corresponding type declarations.
+src/routes/metrics.routes.ts(3,28): error TS2307: Cannot find module '../services/metrics.service' or its corresponding type declarations.
+src/routes/metrics.routes.ts(4,31): error TS2307: Cannot find module '../controllers/metrics.controller' or its corresponding type declarations.
+src/routes/payment.routes.ts(3,28): error TS2307: Cannot find module '../services/payment.service' or its corresponding type declarations.
+src/routes/payment.routes.ts(4,31): error TS2307: Cannot find module '../controllers/payment.controller' or its corresponding type declarations.
+src/routes/settlement.routes.ts(3,31): error TS2307: Cannot find module '../services/settlement.service' or its corresponding type declarations.
+src/routes/settlement.routes.ts(4,34): error TS2307: Cannot find module '../controllers/settlement.controller' or its corresponding type declarations.
+src/routes/transaction.routes.ts(3,32): error TS2307: Cannot find module '../services/transaction.service' or its corresponding type declarations.
+src/routes/transaction.routes.ts(4,35): error TS2307: Cannot find module '../controllers/transaction.controller' or its corresponding type declarations.
+src/routes/webhook.routes.ts(3,28): error TS2307: Cannot find module '../services/webhook.service' or its corresponding type declarations.
+src/routes/webhook.routes.ts(4,31): error TS2307: Cannot find module '../controllers/webhook.controller' or its corresponding type declarations.
+src/server.ts(1,22): error TS2835: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Did you mean './app.js'?
+src/services/audit.service.ts(57,9): error TS2353: Object literal may only specify known properties, and 'resource' does not exist in type '(Without<AuditLogCreateInput, AuditLogUncheckedCreateInput> & AuditLogUncheckedCreateInput) | (Without<...> & AuditLogCreateInput)'.
+src/services/auth.service.ts(39,14): error TS2339: Property 'password' does not exist on type '{ status: UserStatus | null; id: string; merchantId: string | null; email: string; phone: string | null; passwordHash: string | null; firstName: string; lastName: string; ... 17 more ...; updatedAt: Date; }'.
+src/services/blockchain.service.ts(86,9): error TS2322: Type 'JsonValue | undefined' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+  Type 'null' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+src/services/blockchain.service.ts(88,9): error TS2322: Type 'JsonValue | undefined' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+  Type 'null' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+src/services/blockchain.service.ts(206,9): error TS2322: Type 'JsonValue | undefined' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+  Type 'null' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+src/services/blockchain.service.ts(279,9): error TS2322: Type 'JsonValue | undefined' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+  Type 'null' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+src/services/blockchain.service.ts(398,9): error TS2561: Object literal may only specify known properties, but 'walletTransfers' does not exist in type 'BlockchainTransactionInclude<DefaultArgs>'. Did you mean to write 'walletTransfer'?
+src/services/cache.service.ts(19,22): error TS2339: Property 'redis' does not exist on type 'FastifyInstance<RawServerDefault, IncomingMessage, ServerResponse<IncomingMessage>, FastifyBaseLogger, FastifyTypeProviderDefault>'.
+src/services/cache.service.ts(53,20): error TS2339: Property 'redis' does not exist on type 'FastifyInstance<RawServerDefault, IncomingMessage, ServerResponse<IncomingMessage>, FastifyBaseLogger, FastifyTypeProviderDefault>'.
+src/services/cache.service.ts(77,20): error TS2339: Property 'redis' does not exist on type 'FastifyInstance<RawServerDefault, IncomingMessage, ServerResponse<IncomingMessage>, FastifyBaseLogger, FastifyTypeProviderDefault>'.
+src/services/cache.service.ts(93,22): error TS2339: Property 'redis' does not exist on type 'FastifyInstance<RawServerDefault, IncomingMessage, ServerResponse<IncomingMessage>, FastifyBaseLogger, FastifyTypeProviderDefault>'.
+src/services/cache.service.ts(109,21): error TS2339: Property 'redis' does not exist on type 'FastifyInstance<RawServerDefault, IncomingMessage, ServerResponse<IncomingMessage>, FastifyBaseLogger, FastifyTypeProviderDefault>'.
+src/services/cache.service.ts(125,21): error TS2339: Property 'redis' does not exist on type 'FastifyInstance<RawServerDefault, IncomingMessage, ServerResponse<IncomingMessage>, FastifyBaseLogger, FastifyTypeProviderDefault>'.
+src/services/email.service.ts(3,8): error TS2307: Cannot find module 'nodemailer' or its corresponding type declarations.
+src/services/email.service.ts(5,17): error TS2835: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Did you mean '../config/env.js'?
+src/services/exchange.service.ts(74,9): error TS2322: Type 'JsonValue | undefined' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+  Type 'null' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+src/services/exchange.service.ts(200,9): error TS2322: Type 'JsonValue | undefined' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+  Type 'null' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+src/services/gateway.service.ts(80,9): error TS2322: Type 'JsonValue' is not assignable to type 'JsonNull | InputJsonValue'.
+  Type 'null' is not assignable to type 'JsonNull | InputJsonValue'.
+src/services/gateway.service.ts(82,9): error TS2322: Type 'JsonValue' is not assignable to type 'JsonNull | InputJsonValue'.
+  Type 'null' is not assignable to type 'JsonNull | InputJsonValue'.
+src/services/gateway.service.ts(120,9): error TS2322: Type 'JsonValue' is not assignable to type 'JsonNull | InputJsonValue'.
+  Type 'null' is not assignable to type 'JsonNull | InputJsonValue'.
+src/services/gateway.service.ts(122,9): error TS2322: Type 'JsonValue' is not assignable to type 'JsonNull | InputJsonValue'.
+  Type 'null' is not assignable to type 'JsonNull | InputJsonValue'.
+src/services/health.service.ts(17,22): error TS2339: Property 'redis' does not exist on type 'FastifyInstance<RawServerDefault, IncomingMessage, ServerResponse<IncomingMessage>, FastifyBaseLogger, FastifyTypeProviderDefault>'.
+src/services/idempotency.service.ts(17,28): error TS2339: Property 'idempotencyKey' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/idempotency.service.ts(59,28): error TS2339: Property 'idempotencyKey' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/idempotency.service.ts(83,28): error TS2339: Property 'idempotencyKey' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/idempotency.service.ts(105,28): error TS2339: Property 'idempotencyKey' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/notification.service.ts(1,26): error TS2307: Cannot find module './email.service' or its corresponding type declarations.
+src/services/notification.service.ts(2,24): error TS2307: Cannot find module './sms.service' or its corresponding type declarations.
+src/services/notification.service.ts(3,37): error TS2307: Cannot find module './push-notification.service' or its corresponding type declarations.
+src/services/payment.service.ts(83,9): error TS2322: Type 'JsonValue | undefined' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+  Type 'null' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+src/services/payment.service.ts(210,9): error TS2322: Type 'JsonValue | undefined' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+  Type 'null' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+src/services/payment.service.ts(320,31): error TS2339: Property 'COMPLETED' does not exist on type '{ PENDING: "PENDING"; AUTHORIZED: "AUTHORIZED"; CAPTURED: "CAPTURED"; SETTLED: "SETTLED"; FAILED: "FAILED"; REFUNDED: "REFUNDED"; VOIDED: "VOIDED"; CANCELLED: "CANCELLED"; EXPIRED: "EXPIRED"; }'.
+src/services/payment.service.ts(322,9): error TS2322: Type 'JsonValue' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+  Type 'null' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+src/services/payment.service.ts(354,9): error TS2322: Type 'JsonValue | undefined' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+  Type 'null' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+src/services/payment.service.ts(401,11): error TS2322: Type 'JsonValue | undefined' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+  Type 'null' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+src/services/payment.service.ts(451,9): error TS2322: Type 'JsonValue | undefined' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+  Type 'null' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+src/services/payment.service.ts(490,11): error TS2322: Type 'JsonValue | undefined' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+  Type 'null' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+src/services/payment.service.ts(506,35): error TS2339: Property 'COMPLETED' does not exist on type '{ INITIATED: "INITIATED"; PENDING: "PENDING"; AUTHORIZED: "AUTHORIZED"; CAPTURED: "CAPTURED"; SETTLED: "SETTLED"; FAILED: "FAILED"; REFUNDED: "REFUNDED"; PARTIAL_REFUND: "PARTIAL_REFUND"; ... 8 more ...; EXPIRED: "EXPIRED"; }'.
+src/services/payment.service.ts(551,11): error TS2322: Type 'JsonValue | undefined' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+  Type 'null' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+src/services/payment.service.ts(604,11): error TS2322: Type 'JsonValue | undefined' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+  Type 'null' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+src/services/payment.service.ts(668,9): error TS2561: Object literal may only specify known properties, but 'paymentAttempt' does not exist in type 'TransactionInclude<DefaultArgs>'. Did you mean to write 'paymentAttempts'?
+src/services/scheduler.service.ts(1,18): error TS2307: Cannot find module 'node-cron' or its corresponding type declarations.
+src/services/secret-manager.service.ts(1,17): error TS2835: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Did you mean '../config/env.js'?
+src/services/settlement.service.ts(84,9): error TS2322: Type 'JsonValue | undefined' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+  Type 'null' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+src/services/settlement.service.ts(240,9): error TS2322: Type 'JsonValue | undefined' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+  Type 'null' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+src/services/settlement.service.ts(311,9): error TS2353: Object literal may only specify known properties, and 'settlementSchedules' does not exist in type 'SettlementInclude<DefaultArgs>'.
+src/services/storage.service.ts(6,8): error TS2307: Cannot find module '@aws-sdk/client-s3' or its corresponding type declarations.
+src/services/storage.service.ts(8,17): error TS2835: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Did you mean '../config/env.js'?
+src/services/terminal.service.ts(23,15): error TS2353: Object literal may only specify known properties, and 'terminalIdentifier' does not exist in type 'TerminalWhereInput'.
+src/services/terminal.service.ts(67,9): error TS2322: Type '"ACTIVE"' is not assignable to type 'TerminalStatus | EnumTerminalStatusFieldUpdateOperationsInput | undefined'.
+src/services/terminal.service.ts(91,9): error TS2561: Object literal may only specify known properties, but 'lastHeartbeat' does not exist in type '(Without<TerminalUpdateInput, TerminalUncheckedUpdateInput> & TerminalUncheckedUpdateInput) | (Without<...> & TerminalUpdateInput)'. Did you mean to write 'lastHeartbeatAt'?
+src/services/terminal.service.ts(117,9): error TS2561: Object literal may only specify known properties, but 'devices' does not exist in type 'TerminalInclude<DefaultArgs>'. Did you mean to write 'device'?
+src/services/terminal.service.ts(139,9): error TS2322: Type '"INACTIVE"' is not assignable to type 'TerminalStatus | EnumTerminalStatusFieldUpdateOperationsInput | undefined'.
+src/services/transaction.service.ts(10,28): error TS2307: Cannot find module './payment.service' or its corresponding type declarations.
+src/services/transaction.service.ts(11,29): error TS2307: Cannot find module './exchange.service' or its corresponding type declarations.
+src/services/transaction.service.ts(12,28): error TS2307: Cannot find module './gateway.service' or its corresponding type declarations.
+src/services/transaction.service.ts(13,31): error TS2307: Cannot find module './settlement.service' or its corresponding type declarations.
+src/services/transaction.service.ts(14,31): error TS2307: Cannot find module './blockchain.service' or its corresponding type declarations.
+src/services/transaction.service.ts(318,9): error TS2561: Object literal may only specify known properties, but 'paymentAttempt' does not exist in type 'TransactionInclude<DefaultArgs>'. Did you mean to write 'paymentAttempts'?
+src/services/transaction.service.ts(562,22): error TS2551: Property 'cryptoConversion' does not exist on type '{ status: TransactionStatus; id: string; merchantId: string; description: string | null; deletedAt: Date | null; createdAt: Date; updatedAt: Date; ... 29 more ...; paymentIntentId: string | null; }'. Did you mean 'cryptoConversionId'?
+src/services/transaction.service.ts(590,25): error TS2551: Property 'cryptoConversion' does not exist on type '{ status: TransactionStatus; id: string; merchantId: string; description: string | null; deletedAt: Date | null; createdAt: Date; updatedAt: Date; ... 29 more ...; paymentIntentId: string | null; }'. Did you mean 'cryptoConversionId'?
+src/services/transaction.service.ts(600,25): error TS2551: Property 'cryptoConversion' does not exist on type '{ status: TransactionStatus; id: string; merchantId: string; description: string | null; deletedAt: Date | null; createdAt: Date; updatedAt: Date; ... 29 more ...; paymentIntentId: string | null; }'. Did you mean 'cryptoConversionId'?
+src/services/transaction.service.ts(627,25): error TS2551: Property 'cryptoConversion' does not exist on type '{ status: TransactionStatus; id: string; merchantId: string; description: string | null; deletedAt: Date | null; createdAt: Date; updatedAt: Date; ... 29 more ...; paymentIntentId: string | null; }'. Did you mean 'cryptoConversionId'?
+src/services/transaction.service.ts(721,21): error TS2339: Property 'paymentAttempt' does not exist on type '{ status: TransactionStatus; id: string; merchantId: string; description: string | null; deletedAt: Date | null; createdAt: Date; updatedAt: Date; ... 29 more ...; paymentIntentId: string | null; }'.
+src/services/transaction.service.ts(726,23): error TS2339: Property 'paymentAttempt' does not exist on type '{ status: TransactionStatus; id: string; merchantId: string; description: string | null; deletedAt: Date | null; createdAt: Date; updatedAt: Date; ... 29 more ...; paymentIntentId: string | null; }'.
+src/services/transaction.service.ts(736,21): error TS2551: Property 'cryptoConversion' does not exist on type '{ status: TransactionStatus; id: string; merchantId: string; description: string | null; deletedAt: Date | null; createdAt: Date; updatedAt: Date; ... 29 more ...; paymentIntentId: string | null; }'. Did you mean 'cryptoConversionId'?
+src/services/transaction.service.ts(741,23): error TS2551: Property 'cryptoConversion' does not exist on type '{ status: TransactionStatus; id: string; merchantId: string; description: string | null; deletedAt: Date | null; createdAt: Date; updatedAt: Date; ... 29 more ...; paymentIntentId: string | null; }'. Did you mean 'cryptoConversionId'?
+src/services/transaction.service.ts(758,29): error TS2339: Property 'COMPLETED' does not exist on type '{ INITIATED: "INITIATED"; PENDING: "PENDING"; AUTHORIZED: "AUTHORIZED"; CAPTURED: "CAPTURED"; SETTLED: "SETTLED"; FAILED: "FAILED"; REFUNDED: "REFUNDED"; PARTIAL_REFUND: "PARTIAL_REFUND"; ... 8 more ...; EXPIRED: "EXPIRED"; }'.
+src/services/transaction.service.ts(802,21): error TS2339: Property 'paymentAttempt' does not exist on type '{ status: TransactionStatus; id: string; merchantId: string; description: string | null; deletedAt: Date | null; createdAt: Date; updatedAt: Date; ... 29 more ...; paymentIntentId: string | null; }'.
+src/services/transaction.service.ts(807,23): error TS2339: Property 'paymentAttempt' does not exist on type '{ status: TransactionStatus; id: string; merchantId: string; description: string | null; deletedAt: Date | null; createdAt: Date; updatedAt: Date; ... 29 more ...; paymentIntentId: string | null; }'.
+src/services/transaction.service.ts(817,21): error TS2551: Property 'cryptoConversion' does not exist on type '{ status: TransactionStatus; id: string; merchantId: string; description: string | null; deletedAt: Date | null; createdAt: Date; updatedAt: Date; ... 29 more ...; paymentIntentId: string | null; }'. Did you mean 'cryptoConversionId'?
+src/services/transaction.service.ts(822,23): error TS2551: Property 'cryptoConversion' does not exist on type '{ status: TransactionStatus; id: string; merchantId: string; description: string | null; deletedAt: Date | null; createdAt: Date; updatedAt: Date; ... 29 more ...; paymentIntentId: string | null; }'. Did you mean 'cryptoConversionId'?
+src/services/transaction.service.ts(1000,9): error TS2322: Type 'JsonValue | undefined' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+  Type 'null' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+src/services/transaction.service.ts(1035,9): error TS2322: Type 'JsonValue | undefined' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+  Type 'null' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+src/services/transaction.service.ts(1072,9): error TS2322: Type 'string' is not assignable to type 'TransactionStatus'.
+src/services/transaction.service.ts(1075,9): error TS2322: Type 'JsonValue | undefined' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+  Type 'null' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
+src/services/transaction.service.ts(1110,9): error TS2353: Object literal may only specify known properties, and 'settlement' does not exist in type 'TransactionInclude<DefaultArgs>'.
+src/services/wallet.service.ts(36,13): error TS2709: Cannot use namespace 'Decimal' as a type.
+src/services/wallet.service.ts(49,11): error TS2351: This expression is not constructable.
+  Type 'typeof import("/workspaces/smartpos-platform/node_modules/decimal.js/decimal")' has no construct signatures.
+src/services/wallet.service.ts(71,13): error TS2709: Cannot use namespace 'Decimal' as a type.
+src/services/wallet.service.ts(84,11): error TS2351: This expression is not constructable.
+  Type 'typeof import("/workspaces/smartpos-platform/node_modules/decimal.js/decimal")' has no construct signatures.
+src/services/webhook.service.ts(43,11): error TS2322: Type '"RECEIVED"' is not assignable to type 'WebhookStatus | undefined'.
+src/services/webhook.service.ts(87,9): error TS2322: Type '"PROCESSING"' is not assignable to type 'WebhookStatus | EnumWebhookStatusFieldUpdateOperationsInput | undefined'.
+src/services/webhook.service.ts(112,9): error TS2322: Type '"COMPLETED"' is not assignable to type 'WebhookStatus | EnumWebhookStatusFieldUpdateOperationsInput | undefined'.
+npm error Lifecycle script `build` failed with error:
+npm error code 2
+npm error path /workspaces/smartpos-platform/backend
+npm error workspace smartpos-backend@1.0.0
+npm error location /workspaces/smartpos-platform/backend
+npm error command failed
+npm error command sh -c tsc

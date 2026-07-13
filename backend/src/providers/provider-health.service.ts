@@ -1,4 +1,4 @@
-import ProviderManager from "./provider.manager";
+import ProviderManager from "./provider.manager.js";
 
 export default class ProviderHealthService {
 

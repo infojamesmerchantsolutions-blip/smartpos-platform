@@ -1,12 +1,12 @@
-import StripeProvider from "./stripe.provider";
-import PaystackProvider from "./paystack.provider";
-import FlutterwaveProvider from "./flutterwave.provider";
-import CoinbaseProvider from "./coinbase.provider";
-import BinanceProvider from "./binance.provider";
+import StripeProvider from "./stripe.provider.js";
+import PaystackProvider from "./paystack.provider.js";
+import FlutterwaveProvider from "./flutterwave.provider.js";
+import CoinbaseProvider from "./coinbase.provider.js";
+import BinanceProvider from "./binance.provider.js";
 
-import BaseProvider from "./base.provider";
+import BaseProvider from "./base.provider.js";
 
-import env from "../config/env";
+import env from "../config/env.js";
 
 export default class ProviderFactory {
 

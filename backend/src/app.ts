@@ -1,12 +1,12 @@
 import Fastify from "fastify";
 
-import prismaPlugin from "./plugins/prisma";
-import jwtPlugin from "./plugins/jwt";
-import swaggerPlugin from "./plugins/swagger";
-import errorHandlerPlugin from "./plugins/error-handler";
-import requestValidatorPlugin from "./plugins/request-validator";
+import prismaPlugin from "./plugins/prisma.js";
+import jwtPlugin from "./plugins/jwt.js";
+import swaggerPlugin from "./plugins/swagger.js";
+import errorHandlerPlugin from "./plugins/error-handler.js";
+import requestValidatorPlugin from "./plugins/request-validator.js";
 
-import registerRoutes from "./routes";
+import registerRoutes from "./routes.js";
 
 const app = Fastify({
 

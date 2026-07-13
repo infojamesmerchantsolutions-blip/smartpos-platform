@@ -10,7 +10,7 @@ import BaseProvider, {
 
   ProviderResponse
 
-} from "./base.provider";
+} from "./base.provider.js";
 
 export default class StripeProvider extends BaseProvider {
 
