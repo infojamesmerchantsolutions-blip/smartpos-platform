@@ -19,6 +19,8 @@ async function start() {
 
   try {
 
+    console.log(app.printRoutes());
+
     await app.listen({
 
       port: PORT,
