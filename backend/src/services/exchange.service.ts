@@ -95,6 +95,17 @@ export default class ExchangeService {
 
   ) {
 
+    if (fromCurrency === toCurrency) {
+      return {
+        fromCurrency,
+        toCurrency,
+        rate: new Prisma.Decimal(1),
+        amount,
+        convertedAmount: amount,
+        expiresAt: null
+      };
+    }
+
     const rate =
       await this.latestRate(
         fromCurrency,

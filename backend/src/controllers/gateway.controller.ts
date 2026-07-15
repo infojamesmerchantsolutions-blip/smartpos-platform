@@ -8,6 +8,22 @@ export default class GatewayController {
     private readonly gatewayService: GatewayService
   ) {}
 
+  createProvider = async (
+    request: FastifyRequest,
+    reply: FastifyReply
+  ) => {
+
+    const provider =
+    await this.gatewayService.createProvider(
+      request.body as any
+    );
+
+    return reply.code(201).send({
+      success: true,
+      data: provider,
+    });
+  };
+
   providers = async (
 
     request: FastifyRequest,

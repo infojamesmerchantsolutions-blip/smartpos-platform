@@ -7,15 +7,42 @@ export default class WalletService {
     private readonly app: FastifyInstance
   ) {}
 
-  async createWallet(data: any) {
+  async createWallet(data: {
+  merchantId: string;
+  name: string;
+  currency: any;
+  balance?: Prisma.Decimal;
+  availableBalance?: Prisma.Decimal;
+  reservedBalance?: Prisma.Decimal;
+}) {
 
-    return this.app.prisma.wallet.create({
+  return this.app.prisma.wallet.create({
 
-      data
+    data: {
 
-    });
+      merchantId: data.merchantId,
 
-  }
+      name: data.name,
+
+      currency: data.currency,
+
+      balance:
+        data.balance ??
+        new Prisma.Decimal(0),
+
+      availableBalance:
+        data.availableBalance ??
+        new Prisma.Decimal(0),
+
+      reservedBalance:
+        data.reservedBalance ??
+        new Prisma.Decimal(0)
+
+    }
+
+  });
+
+}
 
   async getWallet(id: string) {
 
@@ -47,6 +74,9 @@ export default class WalletService {
 
     const balance =
       new Prisma.Decimal(wallet.balance);
+    
+      const newBalance =
+          balance.plus(amount);
 
     return this.app.prisma.wallet.update({
 
@@ -58,7 +88,8 @@ export default class WalletService {
 
       data: {
 
-        balance: balance.plus(amount)
+        balance: newBalance,
+        availableBalance: newBalance
 
       }
 
@@ -81,31 +112,217 @@ export default class WalletService {
     }
 
     const balance =
-      new Prisma.Decimal(wallet.balance);
+  new Prisma.Decimal(wallet.balance);
 
-    if (balance.lessThan(amount)) {
-      throw new Error(
-        "Insufficient wallet balance."
-      );
-    }
+if (balance.lessThan(amount)) {
+  throw new Error(
+    "Insufficient wallet balance."
+  );
+}
 
-    return this.app.prisma.wallet.update({
+const newBalance =
+  balance.minus(amount);
 
-      where: {
+return this.app.prisma.wallet.update({
 
-        id: walletId
+  where: {
 
-      },
+    id: walletId
 
-      data: {
+  },
 
-        balance: balance.minus(amount)
+  data: {
 
-      }
-
-    });
+    balance: newBalance,
+    availableBalance: newBalance
 
   }
+
+});
+
+  }
+
+  async reserveFunds(
+  walletId: string,
+  amount: Prisma.Decimal
+) {
+
+  const wallet =
+    await this.getWallet(walletId);
+
+  if (!wallet) {
+
+    throw new Error(
+      "Wallet not found."
+    );
+
+  }
+
+  const availableBalance =
+    new Prisma.Decimal(
+      wallet.availableBalance
+    );
+
+  const reservedBalance =
+    new Prisma.Decimal(
+      wallet.reservedBalance
+    );
+
+  if (
+    availableBalance.lessThan(amount)
+  ) {
+
+    throw new Error(
+      "Insufficient available balance."
+    );
+
+  }
+
+  return this.app.prisma.wallet.update({
+
+    where: {
+
+      id: walletId
+
+    },
+
+    data: {
+
+      availableBalance:
+        availableBalance.minus(amount),
+
+      reservedBalance:
+        reservedBalance.plus(amount)
+
+    }
+
+  });
+
+}
+
+  async releaseFunds(
+  walletId: string,
+  amount: Prisma.Decimal
+) {
+
+  const wallet =
+    await this.getWallet(walletId);
+
+  if (!wallet) {
+
+    throw new Error(
+      "Wallet not found."
+    );
+
+  }
+
+  const availableBalance =
+    new Prisma.Decimal(
+      wallet.availableBalance
+    );
+
+  const reservedBalance =
+    new Prisma.Decimal(
+      wallet.reservedBalance
+    );
+
+  if (
+    reservedBalance.lessThan(amount)
+  ) {
+
+    throw new Error(
+      "Insufficient reserved balance."
+    );
+
+  }
+
+  return this.app.prisma.wallet.update({
+
+    where: {
+
+      id: walletId
+
+    },
+
+    data: {
+
+      availableBalance:
+        availableBalance.plus(amount),
+
+      reservedBalance:
+        reservedBalance.minus(amount)
+
+    }
+
+  });
+
+}
+
+  async captureFunds(
+  walletId: string,
+  amount: Prisma.Decimal
+) {
+
+  const wallet =
+    await this.getWallet(walletId);
+
+  if (!wallet) {
+
+    throw new Error(
+      "Wallet not found."
+    );
+
+  }
+
+  const balance =
+    new Prisma.Decimal(
+      wallet.balance
+    );
+
+  const reservedBalance =
+    new Prisma.Decimal(
+      wallet.reservedBalance
+    );
+
+  const availableBalance =
+    new Prisma.Decimal(
+      wallet.availableBalance
+    );
+
+  if (
+    reservedBalance.lessThan(amount)
+  ) {
+
+    throw new Error(
+      "Insufficient reserved balance."
+    );
+
+  }
+
+  return this.app.prisma.wallet.update({
+
+    where: {
+
+      id: walletId
+
+    },
+
+    data: {
+
+      balance:
+        balance.minus(amount),
+
+      reservedBalance:
+        reservedBalance.minus(amount),
+
+      availableBalance:
+        availableBalance
+
+    }
+
+  });
+
+}
 
   async merchantWallets(
     merchantId: string

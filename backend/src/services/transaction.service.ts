@@ -376,10 +376,14 @@ export default class TransactionService {
 
   }) {
 
+    console.log("STEP 1 - executePayment started");
+
     const transaction =
       await this.getTransaction(
         data.transactionId
       );
+
+    console.log("STEP 2 - transaction loaded");
 
     if (!transaction) {
 
@@ -418,6 +422,8 @@ export default class TransactionService {
             data.requestHeaders
 
         });
+      
+      console.log("STEP 3 - gateway request created");
 
     /*
     ----------------------------------------
@@ -439,6 +445,8 @@ export default class TransactionService {
             transaction.currency
 
         });
+      
+      console.log("STEP 4 - authorization complete");
 
     /*
     ----------------------------------------
@@ -457,6 +465,8 @@ export default class TransactionService {
           transaction.amount
 
         );
+
+      console.log("STEP 5 - quote calculated");
 
     /*
     ----------------------------------------
@@ -484,6 +494,8 @@ export default class TransactionService {
             transaction.amount
 
         });
+
+      console.log("STEP 6 - conversion created");
 
     /*
     ----------------------------------------
@@ -524,6 +536,8 @@ export default class TransactionService {
       quote
 
     };
+
+    console.log("STEP 7 - gateway response saved");
 
   }
 
@@ -1138,3 +1152,4 @@ if (paymentAttempt) {
   }
 
 }
+

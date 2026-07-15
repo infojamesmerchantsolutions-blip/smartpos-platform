@@ -43,6 +43,22 @@ export default class GatewayService {
 
   }
 
+  async createProvider(data: {
+    name: string;
+    displayName: string;
+    baseUrl?: string;
+    priority?: number;
+  }) {
+    return this.app.prisma.paymentProvider.create({
+      data: {
+        name: data.name,
+        displayName: data.displayName,
+        baseUrl: data.baseUrl,
+        priority: data.priority ?? 0
+      }
+    });
+  }
+
   /*
   |--------------------------------------------------------------------------
   | Gateway Request

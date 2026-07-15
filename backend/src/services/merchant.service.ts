@@ -10,7 +10,21 @@ export default class MerchantService {
 
     return this.app.prisma.merchant.create({
 
-      data
+      data: {
+        name: data.businessName,
+        businessType: data.businessType ?? "GENERAL",
+        email: data.email,
+
+        phone: data.phone,
+        website: data.website,
+
+        country: data.country,
+        state: data.state,
+        city: data.city,
+
+        addressLine1: data.address,
+        postalCode: data.postalCode
+      }
 
     });
 

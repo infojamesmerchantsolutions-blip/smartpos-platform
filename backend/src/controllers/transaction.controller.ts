@@ -23,19 +23,23 @@ export default class TransactionController {
   };
 
   execute = async (
-    request: FastifyRequest,
-    reply: FastifyReply
-  ) => {
-    const result =
-      await this.transactionService.executePayment(
-        request.body as any
-      );
+  request: FastifyRequest,
+  reply: FastifyReply
+) => {
 
-    return reply.send({
-      success: true,
-      data: result
-    });
-  };
+  console.log("BODY:", request.body);
+
+  const result =
+    await this.transactionService.executePayment(
+      request.body as any
+    );
+
+  return reply.send({
+    success: true,
+    data: result
+  });
+
+};
 
   settle = async (
     request: FastifyRequest,

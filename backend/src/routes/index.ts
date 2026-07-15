@@ -1,5 +1,7 @@
 import { FastifyInstance } from "fastify";
 
+import walletRoutes from "./wallet.routes.js";
+import merchantRoutes from "./merchant.routes.js";
 import paymentRoutes from "./payment.routes.js";
 import transactionRoutes from "./transaction.routes.js";
 import blockchainRoutes from "./blockchain.routes.js";
@@ -12,6 +14,14 @@ export default async function registerRoutes(
 ) {
 
   app.register(paymentRoutes, {
+    prefix: "/api/v1"
+  });
+
+  app.register(walletRoutes, {
+    prefix: "/api/v1"
+  });
+
+  app.register(merchantRoutes, {
     prefix: "/api/v1"
   });
 

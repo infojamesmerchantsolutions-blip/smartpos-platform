@@ -3,6 +3,7 @@ import { z } from "zod";
 export const createMerchantSchema = z.object({
 
   businessName: z.string().min(2),
+  businessType: z.string().default("GENERAL"),
 
   legalBusinessName: z.string().optional(),
 

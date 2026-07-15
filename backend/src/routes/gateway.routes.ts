@@ -13,6 +13,11 @@ export default async function gatewayRoutes(
   const controller =
     new GatewayController(service);
 
+    app.post(
+      "/gateway/providers",
+      controller.createProvider
+    );
+
     app.get(
       "/gateway/providers",
       controller.providers
