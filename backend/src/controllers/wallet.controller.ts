@@ -1,3 +1,4 @@
+import { CreateWalletBody } from "../types/wallet.js";
 import { Prisma } from "@prisma/client";
 import { FastifyReply, FastifyRequest } from "fastify";
 import WalletService from "../services/wallet.service.js";
@@ -12,13 +13,38 @@ export default class WalletController {
     reply: FastifyReply
   ) => {
     const wallet =
-      await this.walletService.createWallet(request.body);
+      await this.walletService.createWallet(request.body as CreateWalletBody);
 
     return reply.send({
       success: true,
       data: wallet
     });
   };
+
+  transferFunds = async (
+  request: FastifyRequest,
+  reply: FastifyReply
+) => {
+
+  const {
+    fromWalletId,
+    toWalletId,
+    amount
+  } = request.body as any;
+
+  const result =
+    await this.walletService.transferFunds(
+      fromWalletId,
+      toWalletId,
+      new Prisma.Decimal(amount)
+    );
+
+  return reply.send({
+    success: true,
+    data: result
+  });
+
+};
 
   credit = async (
     request: FastifyRequest,

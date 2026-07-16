@@ -142,6 +142,83 @@ return this.app.prisma.wallet.update({
 
   }
 
+  async transferFunds(
+  fromWalletId: string,
+  toWalletId: string,
+  amount: Prisma.Decimal
+) {
+
+  return this.app.prisma.$transaction(async (tx) => {
+
+    const fromWallet =
+      await tx.wallet.findUnique({
+        where: {
+          id: fromWalletId
+        }
+      });
+
+    if (!fromWallet) {
+      throw new Error("Source wallet not found.");
+    }
+
+    const toWallet =
+      await tx.wallet.findUnique({
+        where: {
+          id: toWalletId
+        }
+      });
+
+    if (!toWallet) {
+      throw new Error("Destination wallet not found.");
+    }
+
+    const fromBalance =
+      new Prisma.Decimal(fromWallet.balance);
+
+    if (fromBalance.lessThan(amount)) {
+      throw new Error("Insufficient wallet balance.");
+    }
+
+    const newFromBalance =
+      fromBalance.minus(amount);
+
+    const toBalance =
+      new Prisma.Decimal(toWallet.balance);
+
+    const newToBalance =
+      toBalance.plus(amount);
+
+    await tx.wallet.update({
+      where: {
+        id: fromWalletId
+      },
+      data: {
+        balance: newFromBalance,
+        availableBalance: newFromBalance
+      }
+    });
+
+    await tx.wallet.update({
+      where: {
+        id: toWalletId
+      },
+      data: {
+        balance: newToBalance,
+        availableBalance: newToBalance
+      }
+    });
+
+    return {
+      fromWalletId,
+      toWalletId,
+      amount,
+      status: "SUCCESS"
+    };
+
+  });
+
+}
+
   async reserveFunds(
   walletId: string,
   amount: Prisma.Decimal

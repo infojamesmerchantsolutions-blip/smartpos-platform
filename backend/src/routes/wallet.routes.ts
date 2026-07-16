@@ -33,6 +33,11 @@ export default async function walletRoutes(
     controller.debit
   );
 
+  app.post(
+    "/wallets/transfer",
+    controller.transferFunds
+  );
+  
   app.get(
     "/merchants/:merchantId/wallets",
     controller.merchantWallets
