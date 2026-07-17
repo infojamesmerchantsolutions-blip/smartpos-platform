@@ -369,6 +369,14 @@ export default class TransactionService {
         data.transactionId
       );
 
+    if (transaction?.gatewayRequest) {
+
+  throw new Error(
+    "Gateway request already exists for this transaction. Create a new transaction instead."
+  );
+
+}
+
     console.log("STEP 2 - transaction loaded");
 
     if (!transaction) {
