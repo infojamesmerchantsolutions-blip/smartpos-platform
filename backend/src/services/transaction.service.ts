@@ -1,8 +1,8 @@
 import {
   Prisma,
+  TransactionStatus,
   PaymentStatus,
   SettlementStatus,
-  TransactionStatus
 } from "@prisma/client";
 
 import { FastifyInstance } from "fastify";
@@ -478,6 +478,17 @@ const requestHeaders = {};
         });
       
       console.log("STEP 4 - authorization complete");
+
+      await this.app.prisma.transaction.update({
+        where:{
+          id: transaction.id
+        },
+        data: {
+          status: "AUTHORIZED"
+        }
+      });
+
+console.log("STEP 4.1 - transaction marked AUTHORIZED");
 
     /*
     ----------------------------------------

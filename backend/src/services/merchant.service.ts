@@ -1,10 +1,15 @@
+import WalletService from "./wallet.service.js";
 import { FastifyInstance } from "fastify";
 
 export default class MerchantService {
 
+  private readonly walletService: WalletService;
   constructor(
     private readonly app: FastifyInstance
-  ) {}
+  ) {
+    this.walletService = new WalletService(app);
+
+  }
 
   async create(data: any) {
 
