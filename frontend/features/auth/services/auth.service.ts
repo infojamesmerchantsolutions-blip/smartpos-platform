@@ -1,22 +1,18 @@
 import { api } from "@/lib/api/client";
+import { ENDPOINTS } from "@/lib/api/endpoints";
+
 import type {
   LoginRequest,
   LoginResponse,
 } from "@/types/auth";
 
-export const authService = {
-  async login(data: LoginRequest): Promise<LoginResponse> {
-    const response = await api.post<LoginResponse>(
-      "/auth/login",
-      data
-    );
+export async function login(
+  data: LoginRequest
+): Promise<LoginResponse> {
+  const response = await api.post<LoginResponse>(
+    ENDPOINTS.AUTH.LOGIN,
+    data
+  );
 
-    return response.data;
-  },
-
-  async me() {
-    const response = await api.get("/auth/me");
-
-    return response.data;
-  },
-};
+  return response.data;
+}
