@@ -7,12 +7,14 @@ import type {
 } from "@/types/auth";
 
 export async function login(
-  data: LoginRequest
+  payload: LoginRequest
 ): Promise<LoginResponse> {
-  const response = await api.post<LoginResponse>(
-    ENDPOINTS.AUTH.LOGIN,
-    data
-  );
 
-  return response.data;
+  const { data } =
+    await api.post<LoginResponse>(
+      ENDPOINTS.AUTH.LOGIN,
+      payload
+    );
+
+  return data;
 }

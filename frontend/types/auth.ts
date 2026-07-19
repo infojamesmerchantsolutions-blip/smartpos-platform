@@ -1,17 +1,21 @@
+export interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+}
+
 export interface LoginRequest {
   email: string;
   password: string;
 }
 
 export interface LoginResponse {
-  accessToken: string;
-  refreshToken: string;
+  success: boolean;
 
-  user: {
-    id: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    role: string;
+  data: {
+    token: string;
+    user: User;
   };
 }
