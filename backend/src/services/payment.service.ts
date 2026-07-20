@@ -122,6 +122,122 @@ export default class PaymentService {
 
   }
 
+  async listPaymentIntents(
+  page = 1,
+  limit = 10
+) {
+
+  const skip =
+    (page - 1) * limit;
+
+  const [items, total] =
+    await this.app.prisma.$transaction([
+
+      this.app.prisma.paymentIntent.findMany({
+
+        skip,
+
+        take: limit,
+
+        include: {
+
+          merchant: true,
+
+          customer: true,
+
+        },
+
+        orderBy: {
+
+          createdAt: "desc",
+
+        },
+
+      }),
+
+      this.app.prisma.paymentIntent.count(),
+
+    ]);
+
+  return {
+
+    items,
+
+    pagination: {
+
+      page,
+
+      limit,
+
+      total,
+
+      pages: Math.ceil(total / limit),
+
+    },
+
+  };
+
+}
+
+async listTransactions(
+  page = 1,
+  limit = 10
+) {
+
+  const skip =
+    (page - 1) * limit;
+
+  const [
+    items,
+    total,
+  ] = await this.app.prisma.$transaction([
+
+    this.app.prisma.transaction.findMany({
+
+      skip,
+
+      take: limit,
+
+      orderBy: {
+
+        createdAt: "desc",
+
+      },
+
+      include: {
+
+        merchant: true,
+
+        terminal: true,
+
+      },
+
+    }),
+
+    this.app.prisma.transaction.count(),
+
+  ]);
+
+  return {
+
+    items,
+
+    pagination: {
+
+      page,
+
+      limit,
+
+      total,
+
+      pages: Math.ceil(total / limit),
+
+    },
+
+  };
+
+}
+
   async expirePaymentIntent(
 
     paymentIntentId: string

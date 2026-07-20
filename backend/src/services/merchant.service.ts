@@ -81,6 +81,36 @@ export default class MerchantService {
 
   }
 
+  async list(
+  page = 1,
+  limit = 10
+) {
+  const skip = (page - 1) * limit;
+
+  const [items, total] =
+    await this.app.prisma.$transaction([
+      this.app.prisma.merchant.findMany({
+        skip,
+        take: limit,
+        orderBy: {
+          createdAt: "desc",
+        },
+      }),
+
+      this.app.prisma.merchant.count(),
+    ]);
+
+  return {
+    items,
+    pagination: {
+      page,
+      limit,
+      total,
+      pages: Math.ceil(total / limit),
+    },
+  };
+}
+
   async update(
     id: string,
     data: any

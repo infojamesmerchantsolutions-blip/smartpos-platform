@@ -6,7 +6,6 @@ import PaymentController from "../controllers/payment.controller.js";
 export default async function paymentRoutes(
   app: FastifyInstance
 ) {
-
   const service =
     new PaymentService(app);
 
@@ -19,8 +18,17 @@ export default async function paymentRoutes(
   );
 
   app.get(
+    "/payment-intents",
+    controller.listPaymentIntents
+  );
+
+  app.get(
     "/payment-intents/:id",
     controller.getPaymentIntent
   );
 
+  app.patch(
+    "/payment-intents/:id/expire",
+    controller.expirePaymentIntent
+  );
 }

@@ -1,17 +1,21 @@
 import {
-  LayoutDashboard,
-  ArrowRightLeft,
-  Building2,
-  Wallet,
-  Monitor,
-  Shield,
-  Settings,
-  Users,
+  Activity,
   CreditCard,
   Landmark,
-  BadgeDollarSign,
-  Boxes,
-  ChevronRight,
+  Wallet,
+  Cpu,
+  Shield,
+  Settings,
+  LayoutDashboard,
+  Building2,
+  MonitorSmartphone,
+  ArrowRightLeft,
+  Receipt,
+  Webhook,
+  Users,
+  KeyRound,
+  FileText,
+  Bell,
 } from "lucide-react";
 
 export const navigation = [
@@ -22,18 +26,18 @@ export const navigation = [
   },
 
   {
-    title: "Operations",
-    icon: ArrowRightLeft,
+    title: "Payments",
+    icon: CreditCard,
     children: [
+      {
+        title: "Payment Intents",
+        href: "/dashboard/payment-intents",
+        icon: ArrowRightLeft,
+      },
       {
         title: "Transactions",
         href: "/dashboard/transactions",
-        icon: CreditCard,
-      },
-      {
-        title: "Payments",
-        href: "/dashboard/payments",
-        icon: BadgeDollarSign,
+        icon: Receipt,
       },
       {
         title: "Settlements",
@@ -44,7 +48,7 @@ export const navigation = [
   },
 
   {
-    title: "Business",
+    title: "Merchants",
     icon: Building2,
     children: [
       {
@@ -53,15 +57,15 @@ export const navigation = [
         icon: Building2,
       },
       {
-        title: "Products",
-        href: "/dashboard/products",
-        icon: Boxes,
+        title: "Terminals",
+        href: "/dashboard/terminals",
+        icon: MonitorSmartphone,
       },
     ],
   },
 
   {
-    title: "Finance",
+    title: "Wallets",
     icon: Wallet,
     children: [
       {
@@ -70,26 +74,36 @@ export const navigation = [
         icon: Wallet,
       },
       {
-        title: "Exchange",
+        title: "Exchange Rates",
         href: "/dashboard/exchange",
-        icon: ArrowRightLeft,
+        icon: Activity,
       },
       {
         title: "Blockchain",
         href: "/dashboard/blockchain",
-        icon: ChevronRight,
+        icon: Cpu,
       },
     ],
   },
 
   {
-    title: "Devices",
-    icon: Monitor,
+    title: "Infrastructure",
+    icon: Activity,
     children: [
       {
-        title: "Terminals",
-        href: "/dashboard/terminals",
-        icon: Monitor,
+        title: "Gateway Routing",
+        href: "/dashboard/gateways",
+        icon: Activity,
+      },
+      {
+        title: "Gateway Health",
+        href: "/dashboard/gateway-health",
+        icon: Shield,
+      },
+      {
+        title: "Webhooks",
+        href: "/dashboard/webhooks",
+        icon: Webhook,
       },
     ],
   },
@@ -103,17 +117,10 @@ export const navigation = [
         href: "/dashboard/users",
         icon: Users,
       },
-    ],
-  },
-
-  {
-    title: "Compliance",
-    icon: Shield,
-    children: [
       {
-        title: "KYC",
-        href: "/dashboard/kyc",
-        icon: Shield,
+        title: "API Keys",
+        href: "/dashboard/api-keys",
+        icon: KeyRound,
       },
     ],
   },
@@ -122,6 +129,16 @@ export const navigation = [
     title: "System",
     icon: Settings,
     children: [
+      {
+        title: "Audit Logs",
+        href: "/dashboard/audit-logs",
+        icon: FileText,
+      },
+      {
+        title: "Notifications",
+        href: "/dashboard/notifications",
+        icon: Bell,
+      },
       {
         title: "Settings",
         href: "/dashboard/settings",

@@ -70,6 +70,32 @@ export default class MerchantController {
     });
   };
 
+  list = async (
+  request: FastifyRequest,
+  reply: FastifyReply
+) => {
+
+  const {
+    page = "1",
+    limit = "10",
+  } = request.query as {
+    page?: string;
+    limit?: string;
+  };
+
+  const data =
+    await this.merchantService.list(
+      Number(page),
+      Number(limit)
+    );
+
+  return reply.send({
+    success: true,
+    data,
+  });
+
+};
+
   dashboard = async (
     request: FastifyRequest,
     reply: FastifyReply

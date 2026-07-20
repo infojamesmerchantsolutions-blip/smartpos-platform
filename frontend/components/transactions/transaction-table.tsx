@@ -1,9 +1,13 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import { useTransactions } from "@/features/transactions/hooks/use-transactions";
 import type { Transaction } from "@/features/transactions/types/transaction";
 
 export function TransactionTable() {
+
+  const router = useRouter();
 
   const {
     data,
@@ -73,11 +77,16 @@ export function TransactionTable() {
 
                 <tr
                   key={transaction.id}
-                  className="border-t hover:bg-slate-50"
+                  onClick={() =>
+                    router.push(
+                      `/dashboard/transactions/${transaction.id}`
+                    )
+                  }
+                  className="cursor-pointer border-t hover:bg-slate-50"
                 >
 
                   <td className="p-4 font-mono text-sm">
-                    {transaction.id.slice(0, 10)}
+                    {transaction.id.slice(0,10)}
                   </td>
 
                   <td className="p-4">

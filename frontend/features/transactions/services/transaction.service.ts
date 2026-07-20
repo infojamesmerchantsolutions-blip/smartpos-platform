@@ -9,10 +9,13 @@ export async function getTransactions(
   limit = 10
 ): Promise<TransactionResponse["data"]> {
 
-  const { data } =
-    await api.get<TransactionResponse>(
-      `/transactions?page=${page}&limit=${limit}`
-    );
+  console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
 
-  return data.data;
+  const response = await api.get<TransactionResponse>(
+    `/transactions?page=${page}&limit=${limit}`
+  );
+
+  console.log("Full Response:", response.data);
+
+  return response.data.data;
 }

@@ -1,5 +1,15 @@
+import {
+  PrismaClient,
+  UserRole,
+  UserStatus,
+  MerchantStatus,
+  TerminalStatus,
+  PaymentStatus,
+  TransactionStatus,
+  SettlementStatus,
+  CurrencyType,
+} from "@prisma/client";
 
-import { PrismaClient, UserRole, UserStatus } from "@prisma/client";
 import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
@@ -9,6 +19,12 @@ async function main() {
     "Admin@12345",
     10
   );
+
+  /*
+  |--------------------------------------------------------------------------
+  | Admin User
+  |--------------------------------------------------------------------------
+  */
 
   const user = await prisma.user.upsert({
     where: {
@@ -29,6 +45,107 @@ async function main() {
   });
 
   console.log("Created user:", user.email);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Merchant
+  |--------------------------------------------------------------------------
+  */
+
+  const merchant = await prisma.merchant.upsert({
+    where: {
+      email: "merchant@smartpos.com",
+    },
+    update: {},
+    create: {
+      name: "Demo Merchant",
+      businessType: "Retail",
+      email: "merchant@smartpos.com",
+      phone: "+2348000000000",
+      currency: CurrencyType.USD,
+      status: MerchantStatus.ACTIVE,
+      isVerified: true,
+    },
+  });
+
+  console.log("Created merchant:", merchant.name);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Terminal
+  |--------------------------------------------------------------------------
+  */
+
+  const terminal = await prisma.terminal.upsert({
+    where: {
+      serialNumber: "TERM-1001",
+    },
+    update: {},
+    create: {
+      merchantId: merchant.id,
+      serialNumber: "TERM-1001",
+      model: "PAX A920",
+      manufacturer: "PAX",
+      status: TerminalStatus.ONLINE,
+    },
+  });
+
+  console.log("Created terminal:", terminal.serialNumber);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Payment Intent
+  |--------------------------------------------------------------------------
+  */
+
+  const paymentIntent = await prisma.paymentIntent.create({
+    data: {
+      merchantId: merchant.id,
+      amount: 2500,
+      currency: CurrencyType.USD,
+      clientSecret: "pi_demo_secret",
+      status: PaymentStatus.PENDING,
+      description: "Demo payment intent",
+    },
+  });
+
+  console.log(
+    "Created payment intent:",
+    paymentIntent.id
+  );
+
+  /*
+  |--------------------------------------------------------------------------
+  | Transaction
+  |--------------------------------------------------------------------------
+  */
+
+  const transaction = await prisma.transaction.create({
+    data: {
+      merchantId: merchant.id,
+      terminalId: terminal.id,
+      paymentIntentId: paymentIntent.id,
+
+      amount: 2500,
+      currency: CurrencyType.USD,
+
+      paymentMethod: "CARD",
+      type: "PURCHASE",
+
+      reference: `TX-DEMO-${Date.now()}`,
+
+      description: "Demo POS payment",
+
+      status: TransactionStatus.SETTLED,
+
+      settlementStatus: SettlementStatus.PENDING,
+    },
+  });
+
+  console.log(
+    "Created transaction:",
+    transaction.reference
+  );
 }
 
 main()

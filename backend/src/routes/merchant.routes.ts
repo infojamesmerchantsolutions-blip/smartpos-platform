@@ -18,6 +18,11 @@ export default async function merchantRoutes(
   );
 
   app.get(
+  "/merchants",
+  controller.list
+);
+
+  app.get(
     "/merchants/:id",
     controller.get
   );
