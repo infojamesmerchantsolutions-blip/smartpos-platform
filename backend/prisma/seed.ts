@@ -30,7 +30,13 @@ async function main() {
     where: {
       email: "admin@smartpos.com",
     },
-    update: {},
+    update: {
+      passwordHash,
+      role: UserRole.SUPER_ADMIN,
+      status: UserStatus.ACTIVE,
+      isActive: true,
+      isVerified: true,
+    },
     create: {
       email: "admin@smartpos.com",
       firstName: "Admin",
@@ -44,7 +50,7 @@ async function main() {
     },
   });
 
-  console.log("Created user:", user.email);
+  console.log("Created/updated user:", user.email);
 
   /*
   |--------------------------------------------------------------------------
@@ -56,7 +62,14 @@ async function main() {
     where: {
       email: "merchant@smartpos.com",
     },
-    update: {},
+    update: {
+      name: "Demo Merchant",
+      businessType: "Retail",
+      phone: "+2348000000000",
+      currency: CurrencyType.USD,
+      status: MerchantStatus.ACTIVE,
+      isVerified: true,
+    },
     create: {
       name: "Demo Merchant",
       businessType: "Retail",
@@ -68,7 +81,10 @@ async function main() {
     },
   });
 
-  console.log("Created merchant:", merchant.name);
+  console.log(
+    "Created/updated merchant:",
+    merchant.name
+  );
 
   /*
   |--------------------------------------------------------------------------
@@ -80,7 +96,12 @@ async function main() {
     where: {
       serialNumber: "TERM-1001",
     },
-    update: {},
+    update: {
+      merchantId: merchant.id,
+      model: "PAX A920",
+      manufacturer: "PAX",
+      status: TerminalStatus.ONLINE,
+    },
     create: {
       merchantId: merchant.id,
       serialNumber: "TERM-1001",
@@ -90,7 +111,10 @@ async function main() {
     },
   });
 
-  console.log("Created terminal:", terminal.serialNumber);
+  console.log(
+    "Created/updated terminal:",
+    terminal.serialNumber
+  );
 
   /*
   |--------------------------------------------------------------------------
@@ -98,19 +122,30 @@ async function main() {
   |--------------------------------------------------------------------------
   */
 
-  const paymentIntent = await prisma.paymentIntent.create({
-    data: {
-      merchantId: merchant.id,
-      amount: 2500,
-      currency: CurrencyType.USD,
-      clientSecret: "pi_demo_secret",
-      status: PaymentStatus.PENDING,
-      description: "Demo payment intent",
-    },
-  });
+  const paymentIntent =
+    await prisma.paymentIntent.upsert({
+      where: {
+        clientSecret: "pi_demo_secret",
+      },
+      update: {
+        merchantId: merchant.id,
+        amount: 2500,
+        currency: CurrencyType.USD,
+        status: PaymentStatus.PENDING,
+        description: "Demo payment intent",
+      },
+      create: {
+        merchantId: merchant.id,
+        amount: 2500,
+        currency: CurrencyType.USD,
+        clientSecret: "pi_demo_secret",
+        status: PaymentStatus.PENDING,
+        description: "Demo payment intent",
+      },
+    });
 
   console.log(
-    "Created payment intent:",
+    "Created/updated payment intent:",
     paymentIntent.id
   );
 
@@ -120,30 +155,40 @@ async function main() {
   |--------------------------------------------------------------------------
   */
 
-  const transaction = await prisma.transaction.create({
-    data: {
-      merchantId: merchant.id,
-      terminalId: terminal.id,
-      paymentIntentId: paymentIntent.id,
-
-      amount: 2500,
-      currency: CurrencyType.USD,
-
-      paymentMethod: "CARD",
-      type: "PURCHASE",
-
-      reference: `TX-DEMO-${Date.now()}`,
-
-      description: "Demo POS payment",
-
-      status: TransactionStatus.SETTLED,
-
-      settlementStatus: SettlementStatus.PENDING,
-    },
-  });
+  const transaction =
+    await prisma.transaction.upsert({
+      where: {
+        reference: "TX-DEMO-001",
+      },
+      update: {
+        merchantId: merchant.id,
+        terminalId: terminal.id,
+        paymentIntentId: paymentIntent.id,
+        amount: 2500,
+        currency: CurrencyType.USD,
+        paymentMethod: "CARD",
+        type: "PURCHASE",
+        description: "Demo POS payment",
+        status: TransactionStatus.SETTLED,
+        settlementStatus: SettlementStatus.PENDING,
+      },
+      create: {
+        merchantId: merchant.id,
+        terminalId: terminal.id,
+        paymentIntentId: paymentIntent.id,
+        amount: 2500,
+        currency: CurrencyType.USD,
+        paymentMethod: "CARD",
+        type: "PURCHASE",
+        reference: "TX-DEMO-001",
+        description: "Demo POS payment",
+        status: TransactionStatus.SETTLED,
+        settlementStatus: SettlementStatus.PENDING,
+      },
+    });
 
   console.log(
-    "Created transaction:",
+    "Created/updated transaction:",
     transaction.reference
   );
 }

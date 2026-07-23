@@ -34,17 +34,15 @@ async function buildApp() {
   |--------------------------------------------------------------------------
   */
 
-  app.get(
-    "/health",
-    async () => {
-      return {
-        success: true,
-        service: "SmartPOS API",
-        status: "healthy",
-        timestamp: new Date()
-      };
-    }
-  );
+  app.get("/health", async (request, reply) => {
+  console.log("HEALTH ROUTE HIT");
+
+  return {
+    success: true,
+    status: "ok",
+    time: new Date().toISOString(),
+  };
+});
 
   return app;
 
